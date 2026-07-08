@@ -1,0 +1,8 @@
+numpy
+pandas
+matplotlib
+scipy
+openpyxl
+pyyaml
+deap
+scikit-opt

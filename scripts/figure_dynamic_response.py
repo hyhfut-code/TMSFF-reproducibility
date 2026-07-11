@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Plot the dynamic response comparison for the curved-road baseline test."""
+"""Plot the smoothed dynamic response comparison for the curved-road baseline test.
+
+The smoothing is used only for visual presentation. Quantitative indicators in
+``curved_cf_metrics.csv`` are calculated from the original simulation results.
+"""
 
 from __future__ import annotations
 
@@ -35,49 +39,98 @@ def set_style() -> None:
     )
 
 
-def smooth(time: np.ndarray, values: np.ndarray, window_s: float = 0.9) -> np.ndarray:
+MODEL_ORDER = ["TMSFF", "C-FVD", "GACF"]
+MODEL_LABELS = {
+    "TMSFF": "TMSFF",
+    "C-FVD": "C-FVD baseline",
+    "GACF": "GACF baseline",
+}
+MODEL_COLORS = {
+    "TMSFF": "#0072B2",
+    "C-FVD": "#D55E00",
+    "GACF": "#7F7F7F",
+}
+MODEL_STYLES = {
+    "TMSFF": "-",
+    "C-FVD": "--",
+    "GACF": "-.",
+}
+
+
+def smooth(time: np.ndarray, values: np.ndarray, window_s: float = 0.9, passes: int = 2) -> np.ndarray:
     dt = float(np.nanmedian(np.diff(time)))
     window = max(3, int(round(window_s / max(dt, 1e-6))))
     if window % 2 == 0:
         window += 1
-    return pd.Series(values).rolling(window=window, center=True, min_periods=1).mean().to_numpy()
+    smoothed = pd.Series(values)
+    for _ in range(passes):
+        smoothed = smoothed.rolling(window=window, center=True, min_periods=1).mean()
+    return smoothed.to_numpy()
 
 
 def polish(ax: plt.Axes) -> None:
     ax.grid(True, color="#D9D9D9", linewidth=0.55, alpha=0.82)
     ax.set_axisbelow(True)
+    ax.tick_params(direction="out", width=0.8, length=3.2)
     for spine in ax.spines.values():
         spine.set_color("#333333")
         spine.set_linewidth(0.85)
+
+
+def set_range_by_data(ax: plt.Axes, values: np.ndarray, include_zero: bool = False, symmetric: bool = False) -> None:
+    values = np.asarray(values, dtype=float)
+    values = values[np.isfinite(values)]
+    if values.size == 0:
+        return
+    if symmetric:
+        bound = float(np.nanpercentile(np.abs(values), 98.5))
+        bound = max(bound * 1.18, 0.1)
+        ax.set_ylim(-bound, bound)
+        return
+    ymin = float(np.nanpercentile(values, 1.0))
+    ymax = float(np.nanpercentile(values, 99.0))
+    if include_zero:
+        ymin = min(ymin, 0.0)
+        ymax = max(ymax, 0.0)
+    pad = max((ymax - ymin) * 0.12, 0.05)
+    ax.set_ylim(ymin - pad, ymax + pad)
 
 
 def main() -> None:
     set_style()
     data = pd.read_csv(CSV_FILE)
     data = data[data["time_s"] >= 3.0].copy()
-    colors = {"TMSFF": "#0072B2", "C-FVD": "#D55E00", "GACF": "#7F7F7F"}
-    styles = {"TMSFF": "-", "C-FVD": "--", "GACF": "-."}
     panels = [
-        ("v_mps", "Speed (m/s)", "(a) Speed", False),
-        ("spacing_error_m", "Spacing error (m)", "(b) Spacing error", True),
-        ("a_mps2", r"Acceleration (m/s$^2$)", "(c) Acceleration", True),
-        ("jerk_mps3", r"Jerk (m/s$^3$)", "(d) Jerk", True),
+        ("v_mps", "Speed (m/s)", "(a) Speed", False, False),
+        ("spacing_error_m", "Spacing error (m)", "(b) Spacing error", True, False),
+        ("a_mps2", r"Acceleration (m/s$^2$)", "(c) Acceleration", True, True),
+        ("jerk_mps3", r"Jerk (m/s$^3$)", "(d) Jerk", True, True),
     ]
 
     fig, axes = plt.subplots(2, 2, figsize=(7.2, 5.05), dpi=600, sharex=True)
     axes = axes.ravel()
-    for ax, (column, ylabel, label, zero_line) in zip(axes, panels):
-        for model in ["TMSFF", "C-FVD", "GACF"]:
+    for ax, (column, ylabel, label, zero_line, symmetric) in zip(axes, panels):
+        panel_values = []
+        for model in MODEL_ORDER:
             sub = data[data["model"] == model].sort_values("time_s")
             time = sub["time_s"].to_numpy()
             values = sub[column].to_numpy()
             if column == "jerk_mps3":
-                values = smooth(time, smooth(time, sub["a_mps2"].to_numpy()), 1.1)
+                values = smooth(time, sub["a_mps2"].to_numpy(), 0.9, passes=2)
                 values = np.gradient(values, time)
-                values = smooth(time, values, 1.1)
+                values = smooth(time, values, 1.1, passes=2)
             else:
-                values = smooth(time, values, 0.9)
-            ax.plot(time, values, color=colors[model], linestyle=styles[model], lw=1.7, label=model)
+                values = smooth(time, values, 0.9, passes=2)
+            panel_values.append(values)
+            line_width = 1.75 if model == "TMSFF" else 1.55
+            ax.plot(
+                time,
+                values,
+                color=MODEL_COLORS[model],
+                linestyle=MODEL_STYLES[model],
+                lw=line_width,
+                label=MODEL_LABELS[model],
+            )
         if zero_line:
             ax.axhline(0.0, color="#555555", lw=0.7, ls=(0, (3, 2)))
         ax.set_ylabel(ylabel)
@@ -92,6 +145,8 @@ def main() -> None:
             bbox={"boxstyle": "square,pad=0.12", "facecolor": "white", "edgecolor": "none", "alpha": 0.82},
         )
         polish(ax)
+        if panel_values:
+            set_range_by_data(ax, np.concatenate(panel_values), include_zero=zero_line, symmetric=symmetric)
 
     for ax in axes[2:]:
         ax.set_xlabel("Time (s)")

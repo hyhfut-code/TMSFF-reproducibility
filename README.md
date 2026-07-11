@@ -77,7 +77,7 @@ The raw trajectory data are not redistributed because of data-use restrictions. 
 The source code, parameter settings, processed simulation outputs, and plotting scripts used for the additional baseline comparison and simulation-based stability-related analysis are available at:
 
 ```text
-https://github.com/hyhfut-code/TMSFF_reproducibility
+https://github.com/hyhfut-code/TMSFF-reproducibility
 ```
 
 The raw Hefei UAV trajectory data are not publicly available due to institutional data management restrictions and privacy considerations.

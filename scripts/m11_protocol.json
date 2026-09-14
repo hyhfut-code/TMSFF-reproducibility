@@ -1,0 +1,131 @@
+{
+  "experiment_id": "M11_AVIDM_COMMON_PROTOCOL_CITYSIM",
+  "data": {
+    "cleaned_tracks": "external_data/IntersectionA_cleaned.csv",
+    "raw_tracks": "external_data/IntersectionA.csv",
+    "selected_pairs": "scripts/citysim_selected_following_pairs.csv",
+    "sampling_frequency_hz": 30.0,
+    "trajectory_count": 38,
+    "calibration_fraction": 0.7,
+    "aggregation": "equal trajectory weight"
+  },
+  "perception": {
+    "lidar_beams": 20,
+    "beam_angle_deg": 18.0,
+    "detection_range_m": 100.0,
+    "candidate_radius_m": 120.0,
+    "maximum_dynamic_candidates": 16,
+    "road_map_source": "route centreline and boundaries reconstructed from non-target CitySim tracks sharing each entry-exit route"
+  },
+  "optimizer": {
+    "type": "real-coded genetic algorithm",
+    "population_size": 100,
+    "generations": 80,
+    "evaluations_per_run": 8100,
+    "tournament_size": 3,
+    "crossover_probability": 0.9,
+    "uniform_gene_exchange_probability": 0.5,
+    "mutation_individual_probability": 0.2,
+    "mutation_gene_probability": 0.2,
+    "polynomial_mutation_index": 20.0,
+    "elitism": 2,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ]
+  },
+  "objective": "square root of the equal-trajectory mean penalized two-dimensional follower-position MSE (Eq. 35 convention)",
+  "acceleration_limits_mps2": {
+    "longitudinal": [
+      -5.0,
+      3.0
+    ],
+    "avidm_lateral": [
+      -3.0,
+      3.0
+    ]
+  },
+  "model_bounds": {
+    "TMSFF": {
+      "a_max": [
+        0.1,
+        3.0
+      ],
+      "b_comfort": [
+        0.1,
+        3.0
+      ],
+      "T": [
+        0.1,
+        2.0
+      ],
+      "v_desired": [
+        3.0,
+        30.0
+      ],
+      "s0": [
+        0.1,
+        5.0
+      ]
+    },
+    "AV-IDM": {
+      "C_front": [
+        0.5,
+        3.0
+      ],
+      "C_rear": [
+        0.5,
+        3.0
+      ],
+      "C_left": [
+        0.5,
+        3.0
+      ],
+      "C_right": [
+        0.5,
+        3.0
+      ],
+      "a_lat": [
+        0.25,
+        1.0
+      ],
+      "b_lat": [
+        1.0,
+        4.0
+      ],
+      "s0_lat": [
+        0.2,
+        3.0
+      ],
+      "T_lat": [
+        0.5,
+        2.0
+      ],
+      "a_long": [
+        1.0,
+        4.0
+      ],
+      "v_desired_long": [
+        5.0,
+        20.0
+      ],
+      "b_long": [
+        1.0,
+        4.0
+      ],
+      "s0_long": [
+        1.0,
+        4.0
+      ],
+      "T_long": [
+        0.5,
+        2.0
+      ]
+    }
+  },
+  "pre_specified_comparison_seed": 42,
+  "apf_treatment": "existing hand-set-parameter experiment retained as qualitative-only comparison; no quantitative superiority claim"
+}

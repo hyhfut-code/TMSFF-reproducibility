@@ -1,8 +1,0 @@
-__pycache__/
-*.py[cod]
-*.nbc
-*.nbi
-.venv/
-reproduced_outputs/
-external_data/
-~$*

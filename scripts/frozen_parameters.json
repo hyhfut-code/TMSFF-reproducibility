@@ -1,0 +1,377 @@
+{
+  "table1_parameters": {
+    "provenance": "Table 1; calibrated on Hefei and fixed for the main validation and scenario simulations",
+    "T-IDM": {
+      "a_max_mps2": 2.81,
+      "b_comfort_mps2": 2.96,
+      "time_gap_s": 1.28,
+      "desired_speed_mps": 18.06,
+      "minimum_desired_net_arc_gap_m": 4.81
+    },
+    "T-FVD": {
+      "kappa": 0.28,
+      "lambda_speed": 0.3,
+      "maximum_speed_mps": 10.9,
+      "safety_arc_spacing_m": 9.11
+    },
+    "path_planner": {
+      "S_c_m": 15.8
+    }
+  },
+  "table_c2_seed42_parameters": {
+    "provenance": "Table C2 seed-42 common-protocol parameter sets",
+    "seed": 42,
+    "T-IDM": {
+      "a_max": 2.2701,
+      "b_comfort": 2.0417,
+      "T": 1.8076,
+      "v0": 14.8736,
+      "s0": 4.9998
+    },
+    "T-FVD": {
+      "kappa": 0.231,
+      "lambda": 0.4723,
+      "v_max": 7.2108,
+      "h_c": 19.431
+    },
+    "C-FVD": {
+      "kappa_c": 1.7584,
+      "lambda_c": 1.6745,
+      "v_max_c": 15.4573,
+      "h_c_c": 23.5216,
+      "delta_h_c": 6.0378,
+      "eta_c": 233.5248
+    },
+    "GAPB": {
+      "a_max_g": 1.9141,
+      "b_comfort_g": 1.4421,
+      "v0_g": 16.4562,
+      "T_g": 1.392,
+      "s0_g": 8.9809,
+      "gamma_s": 0.0383,
+      "gamma_v": 85.7823,
+      "lambda_g": 0.5078
+    }
+  },
+  "table_e1_seed42_citysim_parameters": {
+    "provenance": "Table E1; CitySim common-protocol audit; pre-specified seed 42",
+    "seed": 42,
+    "TMSFF": {
+      "a_max": 1.794,
+      "b_comfort": 2.1609,
+      "T": 0.4692,
+      "V0": 10.9783,
+      "s0": 2.3328
+    },
+    "AV-IDM": {
+      "C_front": 2.7488,
+      "C_rear": 2.8195,
+      "C_left": 1.8609,
+      "C_right": 2.0326,
+      "a_lat": 0.7927,
+      "b_lat": 1.1385,
+      "s0_lat": 2.9462,
+      "T_lat": 1.0315,
+      "a_long": 1.3372,
+      "V_desired_long": 17.3827,
+      "b_long": 3.9552,
+      "s0_long": 3.9941,
+      "T_long": 0.7075
+    }
+  },
+  "common_protocol_settings": {
+    "data_file": "scripts/hefei_following_sample.csv",
+    "records": 87,
+    "calibration_records": 60,
+    "validation_records": 27,
+    "split_rule": "first 70% calibration; remaining temporal block validation",
+    "objective": "two-dimensional follower-trajectory RMSE on the common empirical path",
+    "population_size": 100,
+    "generations": 80,
+    "fitness_evaluations_per_run": 8100,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "selection": "tournament size 3",
+    "crossover": "uniform, probability 0.9",
+    "mutation": "bounded polynomial, individual probability 0.2, gene probability 0.2, eta 20.0",
+    "elitism": 2,
+    "acceleration_limits_mps2": [
+      -5,
+      3
+    ]
+  },
+  "figure_parameter_mapping": {
+    "1": {
+      "parameter_context": "Not applicable",
+      "bundled": false
+    },
+    "2": {
+      "parameter_context": "Not applicable",
+      "bundled": false
+    },
+    "3": {
+      "parameter_context": "Not applicable",
+      "bundled": false
+    },
+    "4": {
+      "parameter_context": "Not applicable",
+      "bundled": false
+    },
+    "5": {
+      "parameter_context": "Not applicable",
+      "bundled": false
+    },
+    "6": {
+      "parameter_context": "Not applicable",
+      "bundled": false
+    },
+    "7": {
+      "parameter_context": "Not applicable",
+      "bundled": false
+    },
+    "8": {
+      "parameter_context": "Not applicable",
+      "bundled": false
+    },
+    "9": {
+      "parameter_context": "Table 1; Sc=15.8 m",
+      "bundled": false
+    },
+    "10": {
+      "parameter_context": "Table 1; Sc=15.8 m",
+      "bundled": false
+    },
+    "11": {
+      "parameter_context": "Table 1; Sc=15.8 m",
+      "bundled": false
+    },
+    "12": {
+      "parameter_context": "Table 1; Sc=15.8 m",
+      "bundled": false
+    },
+    "13": {
+      "parameter_context": "Table 1; Sc=15.8 m",
+      "bundled": false
+    },
+    "14": {
+      "parameter_context": "Table 1; Sc=15.8 m",
+      "bundled": false
+    },
+    "15": {
+      "parameter_context": "Table C2; pre-specified seed 42",
+      "bundled": true
+    },
+    "16": {
+      "parameter_context": "Table C2; pre-specified seed 42",
+      "bundled": true
+    },
+    "17": {
+      "parameter_context": "Table 1; Sc=15.8 m",
+      "bundled": false
+    },
+    "18": {
+      "parameter_context": "Table 1; Sc=15.8 m",
+      "bundled": false
+    },
+    "19": {
+      "parameter_context": "Table 1; Sc=15.8 m",
+      "bundled": false
+    },
+    "20": {
+      "parameter_context": "Table 1; Sc=15.8 m",
+      "bundled": false
+    },
+    "21": {
+      "parameter_context": "Table C2; pre-specified seed 42",
+      "bundled": true
+    },
+    "22": {
+      "parameter_context": "Table C2; pre-specified seed 42",
+      "bundled": true
+    },
+    "23": {
+      "parameter_context": "Table E1 CitySim common protocol; seeds 42-46",
+      "bundled": true
+    },
+    "24": {
+      "parameter_context": "Table E1 CitySim common protocol; seed 42",
+      "bundled": true
+    },
+    "C1": {
+      "parameter_context": "Table C2 common-protocol five-seed Hefei audit",
+      "bundled": true
+    },
+    "C2": {
+      "parameter_context": "Table C2 common-protocol five-seed Hefei audit",
+      "bundled": true
+    },
+    "A1": {
+      "parameter_context": "Not applicable",
+      "bundled": false
+    },
+    "B1": {
+      "parameter_context": "Not applicable",
+      "bundled": false
+    },
+    "C3": {
+      "parameter_context": "Expanded-bound diagnostic estimates",
+      "bundled": false
+    },
+    "C4": {
+      "parameter_context": "Expanded-bound diagnostic estimates",
+      "bundled": false
+    },
+    "C5": {
+      "parameter_context": "Table 1; only Sc is swept",
+      "bundled": false
+    },
+    "C6": {
+      "parameter_context": "Table 1; Sc=15.8 m",
+      "bundled": false
+    },
+    "C7": {
+      "parameter_context": "Table 1; Sc=15.8 m",
+      "bundled": false
+    },
+    "C8": {
+      "parameter_context": "Table 1; Sc=15.8 m",
+      "bundled": false
+    }
+  },
+  "archived_manuscript_figures": {
+    "15": {
+      "path": "outputs/Fig_15_recalibrated.png",
+      "sha256": "42b2e8f7088ebb4e0987b1ceca131cae053cc6755ea51084b1973468efa48526",
+      "parameter_context": "Table C2; pre-specified seed 42",
+      "caption": "Fig. 15. Spatiotemporal evolution of speed deviations for the same-data-calibrated T-IDM, C-FVD, and GAPB models.",
+      "archival_method": "Unmodified native embedded manuscript image",
+      "format": "PNG",
+      "pixels": [
+        1091,
+        749
+      ],
+      "native_dpi": [
+        219.9894,
+        219.9894
+      ]
+    },
+    "16": {
+      "path": "outputs/Fig_16_recalibrated.png",
+      "sha256": "e590dba04b85e9fc66299d375babff50300650cc05d61d04cc26db6f9b7ceb46",
+      "parameter_context": "Table C2; pre-specified seed 42",
+      "caption": "Fig. 16. Peak speed-disturbance amplification ratios for the same-data-calibrated T-IDM, C-FVD, and GAPB models.",
+      "archival_method": "Unmodified native embedded manuscript image",
+      "format": "PNG",
+      "pixels": [
+        972,
+        614
+      ],
+      "native_dpi": [
+        219.9894,
+        219.9894
+      ]
+    },
+    "21": {
+      "path": "outputs/Fig_21_recalibrated.tiff",
+      "sha256": "5e04f60f236561881d97990e1be9c76c580210f289f6cb9e4da605e340319274",
+      "parameter_context": "Table C2; pre-specified seed 42",
+      "caption": "Fig. 21. Dynamic response comparison among the same-data-calibrated T-IDM, C-FVD, and GAPB models.",
+      "archival_method": "Unmodified native embedded manuscript image",
+      "format": "TIFF",
+      "pixels": [
+        989,
+        758
+      ],
+      "native_dpi": [
+        220,
+        220
+      ]
+    },
+    "22": {
+      "path": "outputs/Fig_22_recalibrated.png",
+      "sha256": "41cdc52cd8c9928f196608ba83cac943efcda5518c0150cf4dd02112522eff02",
+      "parameter_context": "Table C2; pre-specified seed 42",
+      "caption": "Fig. 22. Normalized longitudinal performance comparison among the same-data-calibrated T-IDM, C-FVD, and GAPB models.",
+      "archival_method": "Unmodified native embedded manuscript image",
+      "format": "PNG",
+      "pixels": [
+        4245,
+        2300
+      ],
+      "native_dpi": [
+        599.9988,
+        599.9988
+      ]
+    },
+    "23": {
+      "path": "outputs/Fig_23.png",
+      "sha256": "8cc70d1a39f1ec95a5a021647c46fa47060600506404f552070a5e6ef44c8b70",
+      "parameter_context": "Table E1 CitySim common protocol; seeds 42-46",
+      "caption": "Fig. 23. Common-protocol calibration and temporal generalization of TMSFF and AV-IDM: (a) mean best calibration objective across seeds 42–46, with shaded bands denoting ±1 SD; (b) calibration and temporal-holdout objectives for every seed.",
+      "archival_method": "Unmodified native embedded manuscript image",
+      "format": "PNG",
+      "pixels": [
+        1430,
+        585
+      ],
+      "native_dpi": [
+        219.9894,
+        219.9894
+      ]
+    },
+    "24": {
+      "path": "outputs/Fig_24.png",
+      "sha256": "5a0678c56f71386a82d702c63f30e217c926500282c7fe71a0811b68a954f999",
+      "parameter_context": "Table E1 CitySim common protocol; seed 42",
+      "caption": "Fig. 24. CitySim temporal-holdout comparison using the pre-specified seed-42 parameter sets: (a) trajectory of the previously designated representative pair (leader 6, follower 59); (b) its position-error history; (c) paired position RMSE for all 38 trajectories; (d) mean position RMSE by entry-to-exit route. ",
+      "archival_method": "Unmodified native embedded manuscript image",
+      "format": "PNG",
+      "pixels": [
+        4389,
+        3429
+      ],
+      "native_dpi": [
+        599.9988,
+        599.9988
+      ]
+    },
+    "C1": {
+      "path": "outputs/Fig_C1.png",
+      "sha256": "1201ba7209ceb516a818a3abf75e0a4a0b6c42329d980a8257ce9e8c67ea6cf4",
+      "parameter_context": "Table C2 common-protocol five-seed Hefei audit",
+      "caption": "Fig. C1. Common-protocol T-IDM convergence over 80 generations and five random seeds.",
+      "archival_method": "Unmodified native embedded manuscript image",
+      "format": "PNG",
+      "pixels": [
+        867,
+        518
+      ],
+      "native_dpi": [
+        219.9894,
+        219.9894
+      ]
+    },
+    "C2": {
+      "path": "outputs/Fig_C2.png",
+      "sha256": "afd85fc73f6397a5ad6bb4ac5dae375b1018d9ba8ff2652c8f91682f925f14b9",
+      "parameter_context": "Table C2 common-protocol five-seed Hefei audit",
+      "caption": "Fig. C2. Common-protocol T-FVD convergence over 80 generations and five random seeds.",
+      "archival_method": "Unmodified native embedded manuscript image",
+      "format": "PNG",
+      "pixels": [
+        867,
+        518
+      ],
+      "native_dpi": [
+        219.9894,
+        219.9894
+      ]
+    }
+  },
+  "checked_manuscript_sha256": "0b067b69967328e3ae0abf948c801b1cdd12445dac053bccf30e2e91be5ef290"
+}

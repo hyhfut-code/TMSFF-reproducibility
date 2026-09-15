@@ -1,0 +1,160 @@
+{
+  "cache_file": "reproduced_outputs/cache/m11_citysim_cache_k16.npz",
+  "source_files": {
+    "cleaned_tracks": {
+      "path": "external_data/IntersectionA_cleaned.csv",
+      "sha256": "cca25abf399fddc222fbb9313509470249e40c4e8c27905df7686d7e49a43115"
+    },
+    "raw_tracks": {
+      "path": "external_data/IntersectionA.csv",
+      "sha256": "110d1c7713a086a0c2204ab930fd05c6eb68b28aeb6d419ae5c31821acce7d6b"
+    },
+    "selected_pairs": {
+      "path": "scripts/citysim_selected_following_pairs.csv",
+      "sha256": "60dd58d79e2aaa3c7f9cfd5b6cd34f8d70e7513769cd6b58af737bd77710b260"
+    }
+  },
+  "pair_count": 38,
+  "total_frames": 9009,
+  "calibration_frames": 6289,
+  "holdout_frames": 2720,
+  "maximum_frames_per_pair": 566,
+  "maximum_dynamic_candidates": 16,
+  "candidate_count_mean": 16.0,
+  "candidate_count_min": 16,
+  "candidate_count_max": 16,
+  "frames_where_leader_was_forced_into_candidate_set": 33,
+  "target_follower_ids_excluded_from_route_map": [
+    4,
+    59,
+    102,
+    374,
+    462,
+    1940,
+    1964,
+    1983,
+    1986,
+    1991,
+    2015,
+    2017,
+    2018,
+    2019,
+    2021,
+    2080,
+    2563,
+    2777,
+    2789,
+    2820,
+    2828,
+    2833,
+    2850,
+    2888,
+    2893,
+    2904,
+    2912,
+    2918,
+    2921,
+    2964,
+    3006,
+    3025,
+    3156,
+    3162,
+    3172,
+    3180,
+    3183,
+    3193
+  ],
+  "route_reconstruction": [
+    {
+      "entry_lane": 3,
+      "exit_lane": 28,
+      "non_target_source_tracks": 7,
+      "median_left_boundary_distance_m": 2.5,
+      "median_right_boundary_distance_m": 2.5
+    },
+    {
+      "entry_lane": 3,
+      "exit_lane": 35,
+      "non_target_source_tracks": 13,
+      "median_left_boundary_distance_m": 2.5,
+      "median_right_boundary_distance_m": 3.117342478005876
+    },
+    {
+      "entry_lane": 4,
+      "exit_lane": 27,
+      "non_target_source_tracks": 7,
+      "median_left_boundary_distance_m": 2.5,
+      "median_right_boundary_distance_m": 2.5
+    },
+    {
+      "entry_lane": 4,
+      "exit_lane": 35,
+      "non_target_source_tracks": 14,
+      "median_left_boundary_distance_m": 2.5,
+      "median_right_boundary_distance_m": 4.453776177266019
+    },
+    {
+      "entry_lane": 20,
+      "exit_lane": 11,
+      "non_target_source_tracks": 3,
+      "median_left_boundary_distance_m": 2.5,
+      "median_right_boundary_distance_m": 3.3831211311008
+    },
+    {
+      "entry_lane": 21,
+      "exit_lane": 9,
+      "non_target_source_tracks": 4,
+      "median_left_boundary_distance_m": 2.5,
+      "median_right_boundary_distance_m": 2.5
+    },
+    {
+      "entry_lane": 21,
+      "exit_lane": 10,
+      "non_target_source_tracks": 5,
+      "median_left_boundary_distance_m": 2.5,
+      "median_right_boundary_distance_m": 2.6120174067665847
+    },
+    {
+      "entry_lane": 25,
+      "exit_lane": 26,
+      "non_target_source_tracks": 23,
+      "median_left_boundary_distance_m": 2.5,
+      "median_right_boundary_distance_m": 2.5
+    },
+    {
+      "entry_lane": 29,
+      "exit_lane": 19,
+      "non_target_source_tracks": 6,
+      "median_left_boundary_distance_m": 2.5,
+      "median_right_boundary_distance_m": 2.5
+    },
+    {
+      "entry_lane": 30,
+      "exit_lane": 17,
+      "non_target_source_tracks": 6,
+      "median_left_boundary_distance_m": 2.5,
+      "median_right_boundary_distance_m": 2.5
+    },
+    {
+      "entry_lane": 34,
+      "exit_lane": 0,
+      "non_target_source_tracks": 15,
+      "median_left_boundary_distance_m": 2.5,
+      "median_right_boundary_distance_m": 2.5
+    },
+    {
+      "entry_lane": 34,
+      "exit_lane": 1,
+      "non_target_source_tracks": 3,
+      "median_left_boundary_distance_m": 2.5,
+      "median_right_boundary_distance_m": 2.5
+    },
+    {
+      "entry_lane": 35,
+      "exit_lane": 17,
+      "non_target_source_tracks": 2,
+      "median_left_boundary_distance_m": 2.5,
+      "median_right_boundary_distance_m": 2.5
+    }
+  ]
+}

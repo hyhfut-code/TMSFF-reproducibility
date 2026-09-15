@@ -1,0 +1,9 @@
+{
+  "model": "AV-IDM",
+  "seed": 42,
+  "status": "supplementary expanded-bound sensitivity; not the primary comparison",
+  "calibration_objective_m": 1.6976216733657346,
+  "holdout_objective_m": 2.130289175731419,
+  "elapsed_seconds": 89.87455439998303,
+  "evaluations": 8100
+}

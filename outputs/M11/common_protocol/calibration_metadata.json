@@ -1,0 +1,38 @@
+{
+  "cache": "data/m11_citysim_cache_k16.npz",
+  "models": [
+    "TMSFF",
+    "AV-IDM"
+  ],
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "optimizer": {
+    "type": "real-coded genetic algorithm",
+    "population_size": 100,
+    "generations": 80,
+    "evaluations_per_run": 8100,
+    "tournament_size": 3,
+    "crossover_probability": 0.9,
+    "uniform_gene_exchange_probability": 0.5,
+    "mutation_individual_probability": 0.2,
+    "mutation_gene_probability": 0.2,
+    "polynomial_mutation_index": 20.0,
+    "elitism": 2,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ]
+  },
+  "actual_evaluations_per_run": 8100,
+  "trajectory_count": 38,
+  "calibration_frames": 6289,
+  "holdout_frames": 2720
+}

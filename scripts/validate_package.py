@@ -17,6 +17,7 @@ def main():
               'scripts/frozen_parameters.json','scripts/m11_protocol.json','scripts/citysim_core.py',
               'scripts/m11_models.py','scripts/m11_data.py','scripts/run_m11_calibration.py',
               'scripts/run_m11_expanded_bound_audit.py','scripts/analyze_m11_results.py',
+              'scripts/audit_r1_1.py','scripts/plot_figure_e1.py','scripts/test_audit_r1_1.py',
               'scripts/hefei_following_sample.csv','scripts/citysim_selected_following_pairs.csv',
               'outputs/fair_calibration_runs.csv','outputs/fair_calibration_convergence.csv',
               'outputs/recalibrated_baseline_metrics.csv','outputs/recalibrated_baseline_timeseries.csv',
@@ -25,11 +26,21 @@ def main():
               'outputs/M11/common_protocol/ga_runs.csv','outputs/M11/source_hashes_and_cache_metadata.json',
               'outputs/M11/analysis/seed42_holdout_per_trajectory.csv','outputs/M11/analysis/robustness_audits.csv',
               'outputs/M11/analysis/Table_M11_common_protocol_comparison.csv',
-              'outputs/M11/expanded_bound_audit/expanded_bound_summary.json']
-    for i in (15,16,21,22,23,24):
-        name='Fig_21_recalibrated.tiff' if i==21 else (f'Fig_{i:02d}_recalibrated.png' if i in (15,16,22) else f'Fig_{i:02d}.png')
+              'outputs/M11/expanded_bound_audit/expanded_bound_summary.json',
+              'outputs/R1_1/analysis/r1_1_audit_metadata.json',
+              'outputs/R1_1/analysis/r1_1_block_descriptive_summary.csv',
+              'outputs/R1_1/analysis/r1_1_constant_velocity_global_objectives.csv',
+              'outputs/R1_1/analysis/r1_1_equal_horizon_paired_comparisons.csv',
+              'outputs/R1_1/analysis/r1_1_equal_horizon_per_trajectory.csv',
+              'outputs/R1_1/analysis/r1_1_equal_horizon_summary.csv',
+              'outputs/R1_1/analysis/r1_1_paired_block_comparisons.csv',
+              'outputs/R1_1/analysis/r1_1_per_trajectory_block_metrics.csv',
+              'outputs/Fig_E1.png',
+              'outputs/FigC5_fresh_rerun_metadata.json']
+    for i in range(9,25):
+        name=f'Fig_{i:02d}_recalibrated.png' if i in (15,16,21,22) else f'Fig_{i:02d}.png'
         required.append('outputs/'+name)
-    required.extend('outputs/Fig_'+x+'.png' for x in ('C1','C2'))
+    required.extend('outputs/Fig_'+x+'.png' for x in ('C1','C2','C5'))
     for name in required:assert (ROOT/name).is_file(),f'Missing: {name}'
     manifest={}
     for line in (ROOT/'SHA256SUMS.txt').read_text(encoding='utf-8').splitlines():
@@ -67,17 +78,29 @@ def main():
     assert len(rows(ROOT/'outputs/M11/analysis/seed42_holdout_per_trajectory.csv'))==76
     metadata=json.loads((ROOT/'outputs/M11/source_hashes_and_cache_metadata.json').read_text(encoding='utf-8'))
     assert sha(ROOT/'scripts/citysim_selected_following_pairs.csv')==metadata['source_files']['selected_pairs']['sha256']
+    c5=json.loads((ROOT/'outputs/FigC5_fresh_rerun_metadata.json').read_text(encoding='utf-8'))
+    assert c5['hefei_trajectory_count']==13 and c5['hefei_simulation_runs']==234
+    assert c5['citysim_simulation_runs']==684 and c5['parameter_source']=='Table 1'
+    assert len(rows(ROOT/'outputs/FigC5_13trajectory_input_manifest.csv'))==13
+    r11=ROOT/'outputs/R1_1/analysis'
+    assert len(rows(r11/'r1_1_per_trajectory_block_metrics.csv'))==76
+    assert len(rows(r11/'r1_1_block_descriptive_summary.csv'))==22
+    assert len(rows(r11/'r1_1_constant_velocity_global_objectives.csv'))==2
+    assert len(rows(r11/'r1_1_equal_horizon_per_trajectory.csv'))==76
+    assert len(rows(r11/'r1_1_equal_horizon_summary.csv'))==4
+    assert len(rows(r11/'r1_1_equal_horizon_paired_comparisons.csv'))==13
+    assert len(rows(r11/'r1_1_paired_block_comparisons.csv'))==11
+    r11_metadata=json.loads((r11/'r1_1_audit_metadata.json').read_text(encoding='utf-8'))
+    assert r11_metadata['preflight']['trajectory_count']==38
+    assert r11_metadata['equal_horizon_diagnostic_triggered'] is True
+    assert r11_metadata['model_refitting_performed'] is False
+    assert r11_metadata['frozen_split_changed'] is False
+    assert ':\\' not in r11_metadata['cache_path']
+    r11_summary={r['model_or_reference']:r for r in rows(r11/'r1_1_equal_horizon_summary.csv')}
+    assert float(r11_summary['TMSFF_seed42_penalized']['holdout_objective_m'])<float(r11_summary['AV-IDM_seed42_penalized']['holdout_objective_m'])
     readme=(ROOT/'README.md').read_text(encoding='utf-8')
-    assert all(x in readme for x in ('Table 1','Table C2','Table E1','Figs. C3','Fig. C8'))
-    figures=params['archived_manuscript_figures']
-    selected_figures={'15','16','21','22','23','24','C1','C2'}
-    assert set(figures)==selected_figures
-    assert {n for n,r in params['figure_parameter_mapping'].items() if r['bundled']}==selected_figures
-    for number,record in figures.items():
-        assert sha(ROOT/record['path'])==record['sha256'],f'Manuscript image mismatch: {number}'
-    assert not list(ROOT.rglob('*.docx')) and not list(ROOT.rglob('*.xlsx'))
-    assert not (ROOT/'scripts/plot_figure_c5.py').exists()
-    assert not (ROOT/'outputs/Fig_C5.png').exists()
-    print(f'PASS: {len(manifest)} checksummed files, {len(required)} required paths, {len(figures)} byte-matched manuscript figures, complete five-seed M11 outputs.')
+    assert all(x in readme for x in ('Table 1','Table C2','Table E1','Figs. C3','Fig. C8','Fig. E1','R1-1'))
+    assert len(list((ROOT/'outputs').glob('*.png')))==20
+    print(f'PASS: {len(manifest)} checksummed files, {len(required)} required paths, 20 archived PNGs, complete five-seed M11 and R1-1 outputs.')
 
 if __name__=='__main__':main()

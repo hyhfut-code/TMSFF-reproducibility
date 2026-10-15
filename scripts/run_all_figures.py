@@ -44,13 +44,20 @@ def m11_figures(output):
                     ('Fig_M11_2_CitySim_holdout_comparison.png','Fig_24.png')]:
         shutil.copy2(output/old,output/new)
 
+def e1_figure(output):
+    run('plot_figure_e1.py','--data-dir',ROOT/'outputs/R1_1/analysis',
+        '--output-dir',output,'--formats','png')
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--group',choices=['common','m11','all'],default='all')
+    p.add_argument('--group',choices=['common','m11','c5','e1','all'],default='all')
     p.add_argument('--output-dir',type=Path,default=ROOT/'reproduced_outputs')
     a=p.parse_args();output=a.output_dir.resolve();output.mkdir(parents=True,exist_ok=True)
     if a.group in ('common','all'):common_figures(output)
     if a.group in ('m11','all'):m11_figures(output)
+    if a.group in ('c5','all'):
+        run('plot_figure_c5.py','--outputs',ROOT/'outputs','--figures',output)
+    if a.group in ('e1','all'):e1_figure(output)
     print('Completed:',output)
 
 if __name__=='__main__':main()

@@ -1,153 +1,164 @@
-# TMSFF reproducibility package revision 3 selected new experiments
+# TMSFF reproducibility package — revision 4
 
 This selected package accompanies **TMSFF: A Framework for Multi-State
-Car-Following Behavior Modelling in Planar Turning**. Its scope follows the
-manuscript's Data and Code Availability Statement: source code, selected
-processed outputs and revised figures for the common-protocol model comparison,
-curved-road baseline comparison, simulation-based disturbance-propagation
-analysis, and the published AV-IDM common-protocol audit.
+Car-Following Behavior Modelling in Planar Turning**. It follows the previous
+release layout, with two main folders: `scripts/` and `outputs/`.
 
-This is not a dump of the author's working directories. Restricted trajectory
-workbooks, provider datasets, manuscript drafts, reviewer-response drafts,
-temporary outputs and separate reviewer-audit projects are not distributed.
+It provides the source code and selected processed outputs for the common-protocol
+model comparison, curved-road baseline comparison, simulation-based stability
+analysis, and the published AV-IDM comparison. Current computational main-text
+figures are archived as one PNG per figure. The five-seed common-protocol figures
+C1–C2, the corrected 13-trajectory Fig. C5 and the Reviewer 1 Comment 1 temporal-
+block diagnostic (Fig. E1) are additionally included. This selected release does
+not contain every internal reviewer-audit project.
 
 ## Contents
 
-- `scripts/`: executable comparison scripts, model kernels, frozen parameters,
-  the M11 protocol, one previously released de-identified Hefei pair and the
-  frozen CitySim 38-pair manifest.
-- `outputs/`: selected common-protocol calibration histories, curved-road and
-  disturbance-propagation outputs, corrected fuel results and manuscript images.
+- `scripts/`: executable scripts, model kernels, the frozen parameter record,
+  M11 protocol, one previously released de-identified Hefei observed pair, and
+  the frozen CitySim 38-pair manifest.
+- `outputs/`: archived calibration histories, baseline/stability time series,
+  corrected fuel results, current PNG figures and selected Fig. C5 summaries.
 - `outputs/M11/`: source-data hashes, five-seed calibration histories and
-  estimates, per-trajectory holdout errors, paired statistics and robustness
-  audits supporting Table 4, Figs. 23–24 and Appendix E.
+  estimates, per-trajectory temporal-holdout errors, paired statistics and
+  robustness-audit outputs for Table 4, Figs. 23–24 and Appendix E.
+- `outputs/R1_1/analysis/`: per-trajectory block geometry, parameter-free
+  constant-velocity diagnostics, equal-horizon fixed-parameter results, paired
+  statistics and audit metadata supporting Fig. E1.
 - `requirements.txt`: scientific Python dependencies.
-- `SHA256SUMS.txt`: the complete selected-file checksum inventory.
-
-The 8 archived figures are Figs. 15–16, 21–24 and C1–C2. They preserve the exact image
-bytes embedded in the checked revision-3 manuscript; Fig. 21 retains its native
-TIFF format. No low-resolution manuscript image is upsampled or relabeled as a
-600-dpi source. Original resolutions and typography are preserved.
-Executable plotting commands generate new Times New Roman 600-dpi PNGs;
-layout, annotation placement and resolution may differ from the archived images,
-while the numerical inputs remain unchanged.
+- `SHA256SUMS.txt`: checksums for the selected release files.
 
 ## Environment and commands
 
-Run commands from the repository root. The source syntax supports Python
-3.10–3.12; selected commands were checked with Python 3.12. Install and validate:
+Run from the repository root. Python 3.10–3.12 is supported by the source syntax;
+the selected figure commands were checked with Python 3.12. Install dependencies:
 
 ```bash
 python -m pip install -r requirements.txt
 python scripts/validate_package.py
 ```
 
-Reproduce the common-protocol curved-road and disturbance-propagation results
-and replot the M11 comparison:
+Reproduce Figs. 15, 16, 21, 22, 23, 24, C5 and E1:
 
 ```bash
 python scripts/run_all_figures.py
 ```
 
-The common group repeats seed-42 simulations using the supplied complete
-calibration estimates and generates Figs. 15–16 and 21–22. The M11 group replots
-Figs. 23–24 from archived processed outputs without rerunning the optimizer.
-Reproduction outputs go to `reproduced_outputs/`; archived `outputs/` are preserved.
+The default command repeats the seed-42 curved-road and platoon simulations
+using the supplied calibration estimates for Figs. 15–16 and 21–22. It replots
+Figs. 23–24, C5 and E1 from archived processed outputs. It does not repeat the
+full M11 optimization or reconstruct the restricted 13-trajectory Hefei dataset.
+Results are written to `reproduced_outputs/`; archived `outputs/` are preserved.
+You can run a group separately:
 
 ```bash
 python scripts/run_all_figures.py --group common
 python scripts/run_all_figures.py --group m11
+python scripts/run_all_figures.py --group c5
+python scripts/run_all_figures.py --group e1
 python scripts/plot_fair_convergence_figures.py
 ```
 
-Figs. 9–14 and 17–20 are not included in this selected release and are not
-regenerated by this selected command. The package does not claim that it recreates every figure
-or every reviewer experiment from public inputs alone.
+Newly generated plots use Times New Roman and 600-dpi PNG. Archived figures are
+kept at their supplied native resolution; Fig. 17 is the manuscript's original
+330-dpi raster. Figs. 9–14 and 17–20 are archived manuscript images and are not
+regenerated by `run_all_figures.py`.
 
-The runnable curved-road script implements the Eq. (36) fuel-rate polynomial
-and Eq. (37) mL-to-L and m-to-km conversions. Fuel is integrated with left
-rectangles over the same evaluated interval, beginning at 3 s, and divided by
-distance travelled over that interval. The archived T-IDM fuel-use surrogate is
-5.217248346458852 L/100 km, not the historical uncorrected value.
+The Eq. (36) fuel-rate polynomial and Eq. (37) mL-to-L conversion are integrated
+into the runnable baseline script. Fuel is integrated using left rectangles
+over the same post-initialization interval, beginning at 3 s, and divided by
+distance travelled over that interval. The archived T-IDM result is
+5.217248346458852 L/100 km, rather than the historical uncorrected value.
 
 ## Frozen parameters and per-figure mapping
 
-`scripts/frozen_parameters.json` records Table 1, Table C2 seed 42, Table E1
-seed 42, common-protocol settings, the per-figure context mapping and the SHA-256
-hashes of all 8 archived manuscript images. Complete unrounded seed estimates
-remain in the corresponding calibration CSV files.
+`scripts/frozen_parameters.json` contains Table 1, Table C2 seed 42, Table E1
+seed 42 and the common-protocol calibration settings. Exact complete seed
+estimates are retained in the corresponding calibration CSV files. Table 1,
+Table C2, the expanded-bound diagnostic estimates and Table E1 are separate
+parameter contexts and must not be substituted for one another.
 
-Table 1, Table C2, expanded-bound diagnostics and Table E1 are distinct parameter
-contexts and must not be substituted for one another. `citysim_core.py` defaults
-to Table 1 and `S_c = 15.8 m`. The common-protocol runner loads Table C2 seed-42
-estimates from `outputs/fair_calibration_runs.csv`; M11 uses its separate
-CitySim calibration protocol and Table E1 context.
+`citysim_core.py` uses Table 1 defaults and `S_c = 15.8 m` for the main
+validation/scenario model kernel. The common-protocol baseline/stability runner
+loads the separate Table C2 seed-42 estimates from `fair_calibration_runs.csv`.
+The M11 runner uses its independent CitySim protocol and Table E1 estimates.
 
-The mapping also covers figures outside the selected release. A mapping entry
-does not imply that the corresponding private inputs or audit project are included.
+The mapping below covers every manuscript figure, including figures outside
+the selected image bundle. A parameter mapping does not imply that every
+auxiliary diagnostic project is included in this release.
 
-- **Figs. 1–6:** not applicable; conceptual/geometric illustrations; not bundled.
-- **Figs. 7–8:** not applicable; site/data illustrations; not bundled.
-- **Fig. 9:** Table 1, `S_c = 15.8 m`; Hefei No. 12; not bundled.
-- **Fig. 10:** Table 1, `S_c = 15.8 m`; CitySim No. 29; not bundled.
-- **Fig. 11:** Table 1, `S_c = 15.8 m`; 38-pair jerk/RRTTC comparison; not bundled.
-- **Fig. 12:** Table 1 for TMSFF/T-IDM; hand-set APF scenario parameters,
-  qualitative comparison only; not bundled.
-- **Fig. 13:** Table 1 for T-IDM/T-FVD; HDV/Monte Carlo settings in Table C12;
-  not bundled, without the separate mixed-traffic experiment project.
-- **Fig. 14:** Table 1 for T-IDM; HDV/topology/Monte Carlo settings in Table C12;
-  not bundled, without the separate topology experiment project.
-- **Figs. 15–16:** Table C2, pre-specified seed 42, T-IDM/C-FVD/GAPB;
-  archived, with numerical reproduction code and processed outputs.
-- **Figs. 17–20:** Table 1; figure-specific initial states, disturbances and
-  layouts; not bundled, without a claim of full scenario regeneration.
-- **Figs. 21–22:** Table C2, pre-specified seed 42, T-IDM/C-FVD/GAPB;
-  archived, with numerical reproduction code and processed outputs.
-- **Fig. 23:** separate CitySim common protocol, Table E1 context, seeds 42–46;
-  archived, with calibration histories and replotting code.
-- **Fig. 24:** Table E1, pre-specified seed 42; CitySim temporal holdout;
-  archived, with 76 per-model trajectory records and replotting code.
-- **Fig. A1:** not applicable; polynomial fitting; not bundled.
-- **Fig. B1:** not applicable; analytical geometry; not bundled.
-- **Figs. C1–C2:** common-protocol five-seed audit on the released Hefei pair;
-  Table C1 summarizes runs and Table C2 gives seed-42 estimates; bundled.
-- **Figs. C3–C4:** expanded-bound diagnostics; not bundled and not substituted
-  for Table 1 or Table C2 in downstream comparisons.
-- **Fig. C5:** Table 1 with only `S_c` swept; not bundled. This separate
-  threshold-sensitivity project is outside the selected comparison package.
-- **Fig. C6:** Table 1, `S_c = 15.8 m`; branch discontinuity; not bundled.
-- **Fig. C7:** Table 1, `S_c = 15.8 m`; CitySim spacing/path replay; not bundled.
-- **Fig. C8:** Table 1, `S_c = 15.8 m`; CitySim heading noise; not bundled.
+- **Figs. 1–6:** not applicable; conceptual/geometric illustrations.
+- **Figs. 7–8:** not applicable; observed-site/data illustrations.
+- **Fig. 9:** Table 1, `S_c = 15.8 m`; Hefei validation, trajectory No. 12 illustrated.
+- **Fig. 10:** Table 1, `S_c = 15.8 m`; CitySim, trajectory No. 29 illustrated.
+- **Fig. 11:** Table 1, `S_c = 15.8 m`; 38-pair safety/comfort comparison.
+- **Fig. 12:** Table 1 for TMSFF/T-IDM; APF uses hand-set scenario parameters
+  and is a qualitative comparison.
+- **Fig. 13:** Table 1 for T-IDM/T-FVD; HDV and Monte Carlo settings are in Table C12.
+- **Fig. 14:** Table 1 for T-IDM; HDV/topology/Monte Carlo settings are in Table C12.
+- **Figs. 15–16:** Table C2, pre-specified seed 42, for T-IDM, C-FVD and GAPB.
+- **Figs. 17–20:** Table 1; initial states, disturbances and traffic layouts
+  are figure-specific scenario settings.
+- **Figs. 21–22:** Table C2, pre-specified seed 42, for the curved-road comparison.
+- **Fig. 23:** separate CitySim common protocol, Table E1 parameter context,
+  seeds 42–46; all five estimates are provided in `outputs/M11/common_protocol/`.
+- **Fig. 24:** Table E1, pre-specified seed 42; CitySim temporal-holdout comparison.
+- **Fig. A1:** not applicable; polynomial fitting illustration.
+- **Fig. B1:** not applicable; analytical coordinate-rotation geometry.
+- **Figs. C1–C2:** common-protocol five-seed calibration audit on the released
+  observed Hefei pair; Table C1 summarizes runs and Table C2 gives seed-42 estimates.
+- **Figs. C3–C4:** expanded-bound diagnostic estimates; these are not substituted
+  for Table 1 or Table C2 in the downstream comparisons.
+- **Fig. C5:** Table 1, with only `S_c` swept; 13 observed Hefei trajectories and
+  38 CitySim pairs. The 12 September 2026 numerical rerun completed 234 Hefei
+  and 684 CitySim forward simulations. Run metadata and input hashes are archived.
+- **Fig. C6:** Table 1, `S_c = 15.8 m`; branch-discontinuity audit.
+- **Fig. C7:** Table 1, `S_c = 15.8 m`; CitySim spacing/path-replay diagnostic.
+- **Fig. C8:** Table 1, `S_c = 15.8 m`; CitySim heading-noise audit.
+- **Fig. E1:** the constant-velocity reference is parameter-free; TMSFF and
+  AV-IDM use the pre-specified Table E1 seed-42 estimates without refitting.
+  Late-calibration and holdout windows are duration matched per trajectory.
 
 ## Data availability
 
-The full raw Hefei UAV data cannot be publicly redistributed because of
-institutional data-management restrictions and privacy considerations. The
-previously released de-identified 87-frame pair is included solely for the
-post-hoc common-protocol optimizer audit. It does not replace the 13 validation
-trajectories and is not counted as independent validation evidence.
+The 13 Hefei validation trajectories are distinct observed trajectories, as
+confirmed by the author. Their raw UAV records cannot be publicly redistributed
+because of institutional data-management and privacy restrictions. The single
+previously released de-identified observed pair supports the post-hoc optimizer
+audit; it is not counted as independent validation evidence.
+
+To repeat its five-seed common-protocol optimizer audit:
 
 ```bash
 python scripts/second_review_experiments.py scripts/hefei_following_sample.csv reproduced_outputs/hefei_calibration
 ```
 
-Obtain CitySim Intersection A files from the official UCF SST CitySim provider
-under its access/use conditions. For a full M11 rerun, place them at:
+The full 13-trajectory Fig. C5 numerical calculation requires authorized access
+to the private workbook. The plotting command only reads supplied derived
+summaries. Private source-ID mappings, full observed inputs and full simulation
+histories are excluded from this public package.
+
+Obtain the CitySim Intersection A files from the official UCF SST CitySim
+provider under its access/use conditions. For a full M11 rerun, place them at:
 
 ```text
 external_data/IntersectionA_cleaned.csv
 external_data/IntersectionA.csv
 ```
 
-Provider files are not included. `scripts/m11_protocol.json` freezes the objective,
-70/30 temporal split, equal-trajectory weighting, model bounds, GA operators,
-8,100 evaluations per run and seeds 42–46.
-`outputs/M11/source_hashes_and_cache_metadata.json` records source hashes and
-non-target-track route-reconstruction provenance. The pair manifest preserves
-original bytes matching its source hash. Historical calibration metadata may
-retain original run paths; current package locations are given here and in the protocol.
+`scripts/m11_protocol.json` freezes the objective, 70/30 temporal split,
+equal-trajectory weighting, model bounds, GA settings and seeds 42–46.
+`outputs/M11/source_hashes_and_cache_metadata.json` records the source hashes
+and the non-target-track route-reconstruction provenance.
+
+The distributed pair manifest preserves the original bytes matching its source
+hash. Archived calibration metadata retains historical run paths and software
+timings; the current file locations are those given in this README and protocol.
 
 ## Full M11 numerical rerun
+
+The two cache preparation commands use the same provider files and create
+separate candidate-limit caches for the main and robustness calculations:
 
 ```bash
 python scripts/m11_data.py
@@ -157,18 +168,42 @@ python scripts/run_m11_expanded_bound_audit.py
 python scripts/analyze_m11_results.py --source-output reproduced_outputs/M11
 ```
 
-These calibration commands require provider inputs and are not part of the
-lightweight archived-output replot. AV-IDM is an equation-based reimplementation,
-not the original authors' software.
+The frozen five-seed calibration uses 8,100 objective evaluations for each model
+and seed. Its histories, parameter estimates and robustness results are supplied
+so that inspection does not require repeating the optimizer. The AV-IDM source
+is an equation-based reimplementation; it is not the original authors' software.
 
-## Release integrity and publication status
+## Reviewer 1 Comment 1 audit
 
-`.gitattributes` preserves archived bytes across checkout. Python/Numba caches,
-generated reproduction outputs, provider data and Word lock files are ignored.
-`validate_package.py` checks inventory, checksums, syntax, frozen parameters,
-five-seed coverage and archived figure hashes.
+The archived R1-1 audit retains the original 70/30 temporal split. It first
+compares duration, observed-path curvature and a parameter-free
+constant-velocity reference between the calibration and holdout blocks. Because
+the holdout block is shorter, it then compares the last holdout-length portion
+of calibration with the holdout segment. TMSFF and AV-IDM are evaluated with the
+pre-specified seed-42 estimates; neither model is refitted for this diagnostic.
 
-Repository: <https://github.com/hyhfut-code/TMSFF-reproducibility>.
-This local candidate does not establish that the repository is published or
-anonymously accessible. Confirm signed-out access and validate a fresh clone
-after uploading.
+After preparing the authorized CitySim cache as described above, reproduce the
+numerical audit, run its unit tests and regenerate Fig. E1 with:
+
+```bash
+python scripts/audit_r1_1.py
+python scripts/test_audit_r1_1.py
+python scripts/plot_figure_e1.py
+```
+
+The numerical audit writes to `reproduced_outputs/R1_1/`; the plot writes a
+600-dpi Times New Roman PNG to `reproduced_outputs/Fig_E1.png`. The published
+derived tables and figure remain available under `outputs/` for inspection
+without redistributing the provider data.
+
+## Release integrity
+
+The `.gitattributes` file preserves archived bytes across checkout. Temporary
+Python/Numba caches, generated reproduction outputs, provider data and Word lock
+files are ignored by Git. The supplied validator checks release checksums,
+required files, seed coverage, the R1-1 audit inventory and the
+figure-to-parameter record.
+
+Repository URL stated in the manuscript:
+<https://github.com/hyhfu-code/TMSFF-reproducibility>. The repository's public
+accessibility must be checked after uploading this selected release.

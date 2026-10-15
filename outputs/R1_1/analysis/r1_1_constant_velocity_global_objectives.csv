@@ -1,0 +1,3 @@
+﻿block,equal_trajectory_raw_objective_m,equal_trajectory_penalized_objective_m,mean_range_penalty_mse_m2
+calibration,6.914386284329008,7.176079247208438,3.6873756732985132
+holdout,3.353532876914396,3.353532876914396,0.0

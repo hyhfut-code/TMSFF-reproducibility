@@ -1,0 +1,60 @@
+{
+  "calculation": "fresh forward simulation from trajectory-level numerical inputs, not a replot of archived aggregates",
+  "completed_utc": "2026-09-12T02:00:50.625308+00:00",
+  "hefei_trajectory_count": 13,
+  "frames_per_trajectory": 87,
+  "observed_states": 1131,
+  "hefei_dt_s": 0.1,
+  "hefei_simulation_runs": 234,
+  "thresholds_m": [
+    5.0,
+    10.0,
+    15.0,
+    15.8,
+    20.0,
+    25.0,
+    30.0,
+    35.0,
+    40.0
+  ],
+  "models": [
+    "T-IDM",
+    "T-FVD"
+  ],
+  "parameter_source": "Table 1",
+  "parameters": {
+    "status": "original Table 1 parameters calibrated on Hefei and fixed without CitySim recalibration",
+    "parameters": {
+      "a_max_mps2": 2.81,
+      "b_comfort_mps2": 2.96,
+      "time_gap_s": 1.28,
+      "desired_speed_mps": 18.06,
+      "minimum_safe_arc_spacing_m": 4.81
+    },
+    "fixed_T-FVD_parameters": {
+      "kappa": 0.28,
+      "lambda_speed": 0.3,
+      "maximum_speed_mps": 10.9,
+      "safety_arc_spacing_m": 9.11
+    }
+  },
+  "aggregation": "equal arithmetic mean of trajectory-level error statistics",
+  "rmse_evaluation": "86 post-initialization states for heading, spacing and speed; 86 state-advance acceleration values",
+  "branch_denominator": "1131 states (13 x 87) per model and threshold",
+  "data_origin": "all 13 observed, confirmed by the author; legacy origin text ignored without changing numerical inputs",
+  "private_workbook_sha256": "c871d9f4bfe8d8431c698687785132efee31723947a89f48c7db6541bd72c587",
+  "released_sample_sha256": "25161ef6c6d0097f11df213ab983c656a23a9b008cd5e0b6f16278215cd037ff",
+  "workbook_original_matches_csv": true,
+  "numerically_distinct_trajectories": 13,
+  "citysim_recomputed": true,
+  "citysim_source_sha256": "cca25abf399fddc222fbb9313509470249e40c4e8c27905df7686d7e49a43115",
+  "citysim_trajectory_count": 38,
+  "citysim_dt_s": 0.03333333333333333,
+  "citysim_simulation_runs": 684,
+  "code_sha256": {
+    "recompute_fig_c5.py": "54aa5e779dac73e46ba7adc817ec65a123247bb1ba08e0aabd688447f8b629ec",
+    "m4_sc_sensitivity.py": "4ce5f5a4fbd12507047d9325426e4723c167d26b01b77b3fe6896d37fc3f3b77",
+    "citysim_core.py": "3d87202e0dc64d5cc1dc5dc7f51f86a02e1ddfa1aca3ba1d69cff9cfe071dc51"
+  },
+  "elapsed_seconds": 177.2970000000205
+}

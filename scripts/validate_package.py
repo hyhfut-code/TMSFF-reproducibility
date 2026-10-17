@@ -13,7 +13,7 @@ def rows(p):
     with p.open(encoding='utf-8-sig',newline='') as f:return list(csv.DictReader(f))
 
 def main():
-    required=['README.md','requirements.txt','SHA256SUMS.txt','scripts/run_all_figures.py',
+    required=['README.md','LICENSE','requirements.txt','SHA256SUMS.txt','scripts/run_all_figures.py',
               'scripts/frozen_parameters.json','scripts/m11_protocol.json','scripts/citysim_core.py',
               'scripts/m11_models.py','scripts/m11_data.py','scripts/run_m11_calibration.py',
               'scripts/run_m11_expanded_bound_audit.py','scripts/analyze_m11_results.py',
@@ -45,6 +45,7 @@ def main():
               'outputs/rate_limiter/baseline_reproduction_validation.json',
               'outputs/rate_limiter/rate_limiter_metadata_public.json',
               'outputs/rate_limiter/rate_limiter_summary.md',
+              'outputs/Fig_21_recalibrated.tiff',
               'outputs/FigC5_fresh_rerun_metadata.json']
     for i in range(9,25):
         name=f'Fig_{i:02d}_recalibrated.png' if i in (15,16,21,22) else f'Fig_{i:02d}.png'

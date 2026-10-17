@@ -250,5 +250,5 @@ required files, seed coverage, the R1-1 audit inventory and the
 figure-to-parameter record.
 
 Repository URL stated in the manuscript:
-<https://github.com/hyhfu-code/TMSFF-reproducibility>. The repository's public
+<https://github.com/hyhfut-code/TMSFF-reproducibility>. The repository's public
 accessibility must be checked after uploading this selected release.

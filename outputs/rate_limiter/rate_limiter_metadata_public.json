@@ -1,0 +1,40 @@
+{
+  "experiment": "Closed-loop target-heading slew-rate audit",
+  "manuscript_outputs": [
+    "Table C14(a)",
+    "Table C14(b)",
+    "Fig. C9(a)",
+    "Fig. C9(b)"
+  ],
+  "limiter_location": "selected target heading before cubic-path construction",
+  "initialization": "first target heading initialized to the raw selected target",
+  "rates_rad_s": [0.5, 1.0, 2.0, 4.0, 8.0],
+  "selected_rate_rad_s": 0.5,
+  "baseline": "archived hard-switch simulator called directly",
+  "fixed_parameter_source": "Table 1",
+  "model_refitting_performed": false,
+  "hefei_input": {
+    "publicly_redistributed": false,
+    "expected_filename": "external_data/private_normalized_observed_trajectories.csv",
+    "sha256": "9e45614772af038c8d3e964f1f8367c0363c568e928380e9315ad01abe1db6e7",
+    "trajectory_count": 13,
+    "dt_s": 0.1
+  },
+  "citysim_input": {
+    "publicly_redistributed": false,
+    "expected_filename": "external_data/IntersectionA_cleaned.csv",
+    "sha256": "cca25abf399fddc222fbb9313509470249e40c4e8c27905df7686d7e49a43115",
+    "manifest": "scripts/citysim_selected_following_pairs.csv",
+    "manifest_sha256": "60dd58d79e2aaa3c7f9cfd5b6cd34f8d70e7513769cd6b58af737bd77710b260",
+    "trajectory_count": 38,
+    "dt_s": 0.03333333333333333
+  },
+  "metric_aggregation": "equal arithmetic mean of trajectory-level indices",
+  "mape_floors": {
+    "heading": 0.01,
+    "arc_spacing": 0.1,
+    "velocity": 0.1,
+    "acceleration": 0.1
+  },
+  "figure": "Times New Roman, 600 dpi PNG"
+}

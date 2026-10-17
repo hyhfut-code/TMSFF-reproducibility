@@ -13,11 +13,12 @@ def rows(p):
     with p.open(encoding='utf-8-sig',newline='') as f:return list(csv.DictReader(f))
 
 def main():
-    required=['README.md','LICENSE','requirements.txt','SHA256SUMS.txt','scripts/run_all_figures.py',
+    required=['README.md','requirements.txt','SHA256SUMS.txt','scripts/run_all_figures.py',
               'scripts/frozen_parameters.json','scripts/m11_protocol.json','scripts/citysim_core.py',
               'scripts/m11_models.py','scripts/m11_data.py','scripts/run_m11_calibration.py',
               'scripts/run_m11_expanded_bound_audit.py','scripts/analyze_m11_results.py',
               'scripts/audit_r1_1.py','scripts/plot_figure_e1.py','scripts/test_audit_r1_1.py',
+              'scripts/run_rate_limiter_audit.py','scripts/test_rate_limiter_audit.py',
               'scripts/hefei_following_sample.csv','scripts/citysim_selected_following_pairs.csv',
               'outputs/fair_calibration_runs.csv','outputs/fair_calibration_convergence.csv',
               'outputs/recalibrated_baseline_metrics.csv','outputs/recalibrated_baseline_timeseries.csv',
@@ -36,6 +37,14 @@ def main():
               'outputs/R1_1/analysis/r1_1_paired_block_comparisons.csv',
               'outputs/R1_1/analysis/r1_1_per_trajectory_block_metrics.csv',
               'outputs/Fig_E1.png',
+              'outputs/rate_limiter/Table_C14a_RMSE_effect.csv',
+              'outputs/rate_limiter/Table_C14b_steering_change.csv',
+              'outputs/rate_limiter/Fig_C9a_transition.png',
+              'outputs/rate_limiter/Fig_C9b_tradeoff.png',
+              'outputs/rate_limiter/rate_limiter_setting_decision.csv',
+              'outputs/rate_limiter/baseline_reproduction_validation.json',
+              'outputs/rate_limiter/rate_limiter_metadata_public.json',
+              'outputs/rate_limiter/rate_limiter_summary.md',
               'outputs/FigC5_fresh_rerun_metadata.json']
     for i in range(9,25):
         name=f'Fig_{i:02d}_recalibrated.png' if i in (15,16,21,22) else f'Fig_{i:02d}.png'
@@ -98,9 +107,22 @@ def main():
     assert ':\\' not in r11_metadata['cache_path']
     r11_summary={r['model_or_reference']:r for r in rows(r11/'r1_1_equal_horizon_summary.csv')}
     assert float(r11_summary['TMSFF_seed42_penalized']['holdout_objective_m'])<float(r11_summary['AV-IDM_seed42_penalized']['holdout_objective_m'])
+    rate_dir=ROOT/'outputs/rate_limiter'
+    rate_meta=json.loads((rate_dir/'rate_limiter_metadata_public.json').read_text(encoding='utf-8'))
+    assert rate_meta['selected_rate_rad_s']==0.5
+    assert rate_meta['model_refitting_performed'] is False
+    assert ':\\' not in json.dumps(rate_meta)
+    rate_decision=rows(rate_dir/'rate_limiter_setting_decision.csv')
+    selected=[r for r in rate_decision if float(r['target_heading_rate_limit_rad_s'])==0.5][0]
+    assert abs(float(selected['worst_absolute_rmse_change_percent'])-0.7147692682460849)<1e-12
+    assert len(rows(rate_dir/'Table_C14a_RMSE_effect.csv'))==16
+    assert len(rows(rate_dir/'Table_C14b_steering_change.csv'))==4
+    baseline=json.loads((rate_dir/'baseline_reproduction_validation.json').read_text(encoding='utf-8'))
+    assert baseline['status']=='pass' and baseline['maximum_absolute_difference']<1e-10
     readme=(ROOT/'README.md').read_text(encoding='utf-8')
-    assert all(x in readme for x in ('Table 1','Table C2','Table E1','Figs. C3','Fig. C8','Fig. E1','R1-1'))
+    assert all(x in readme for x in ('Table 1','Table C2','Table E1','Figs. C3','Fig. C8','Fig. C9','Table C14','Fig. E1','R1-1'))
     assert len(list((ROOT/'outputs').glob('*.png')))==20
-    print(f'PASS: {len(manifest)} checksummed files, {len(required)} required paths, 20 archived PNGs, complete five-seed M11 and R1-1 outputs.')
+    assert len(list(rate_dir.glob('*.png')))==2
+    print(f'PASS: {len(manifest)} checksummed files, {len(required)} required paths, 22 archived PNGs, complete five-seed M11, R1-1 and rate-limiter outputs.')
 
 if __name__=='__main__':main()

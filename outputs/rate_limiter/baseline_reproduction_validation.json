@@ -1,0 +1,135 @@
+{
+  "status": "pass",
+  "tolerance": 1e-10,
+  "maximum_absolute_difference": 1.0658141036401503e-14,
+  "comparisons": [
+    {
+      "dataset": "Hefei Table 2",
+      "model": "T-IDM",
+      "variable": "Heading angle",
+      "expected": 0.09289168916020436,
+      "actual": 0.0928916891602042,
+      "absolute_difference": 1.6653345369377348e-16
+    },
+    {
+      "dataset": "Hefei Table 2",
+      "model": "T-IDM",
+      "variable": "Arc spacing",
+      "expected": 3.8893817229726406,
+      "actual": 3.8893817229726366,
+      "absolute_difference": 3.9968028886505635e-15
+    },
+    {
+      "dataset": "Hefei Table 2",
+      "model": "T-IDM",
+      "variable": "Velocity",
+      "expected": 0.7473799944672581,
+      "actual": 0.7473799944672586,
+      "absolute_difference": 4.440892098500626e-16
+    },
+    {
+      "dataset": "Hefei Table 2",
+      "model": "T-IDM",
+      "variable": "Acceleration",
+      "expected": 0.7222404447724353,
+      "actual": 0.7222404447724357,
+      "absolute_difference": 3.3306690738754696e-16
+    },
+    {
+      "dataset": "Hefei Table 2",
+      "model": "T-FVD",
+      "variable": "Heading angle",
+      "expected": 0.15521448948339853,
+      "actual": 0.15521448948339867,
+      "absolute_difference": 1.3877787807814457e-16
+    },
+    {
+      "dataset": "Hefei Table 2",
+      "model": "T-FVD",
+      "variable": "Arc spacing",
+      "expected": 7.238591786879526,
+      "actual": 7.238591786879537,
+      "absolute_difference": 1.0658141036401503e-14
+    },
+    {
+      "dataset": "Hefei Table 2",
+      "model": "T-FVD",
+      "variable": "Velocity",
+      "expected": 1.343788668865656,
+      "actual": 1.343788668865656,
+      "absolute_difference": 0.0
+    },
+    {
+      "dataset": "Hefei Table 2",
+      "model": "T-FVD",
+      "variable": "Acceleration",
+      "expected": 0.9338221034182903,
+      "actual": 0.9338221034182903,
+      "absolute_difference": 0.0
+    },
+    {
+      "dataset": "CitySim Table 3",
+      "model": "T-IDM",
+      "variable": "Heading angle",
+      "expected": 0.12010617063530922,
+      "actual": 0.12010617063530916,
+      "absolute_difference": 5.551115123125783e-17
+    },
+    {
+      "dataset": "CitySim Table 3",
+      "model": "T-IDM",
+      "variable": "Arc spacing",
+      "expected": 4.657420973166916,
+      "actual": 4.657420973166916,
+      "absolute_difference": 0.0
+    },
+    {
+      "dataset": "CitySim Table 3",
+      "model": "T-IDM",
+      "variable": "Velocity",
+      "expected": 1.1713938133466106,
+      "actual": 1.1713938133466106,
+      "absolute_difference": 0.0
+    },
+    {
+      "dataset": "CitySim Table 3",
+      "model": "T-IDM",
+      "variable": "Acceleration",
+      "expected": 1.186364947158445,
+      "actual": 1.186364947158445,
+      "absolute_difference": 0.0
+    },
+    {
+      "dataset": "CitySim Table 3",
+      "model": "T-FVD",
+      "variable": "Heading angle",
+      "expected": 0.07697180742103645,
+      "actual": 0.07697180742103639,
+      "absolute_difference": 5.551115123125783e-17
+    },
+    {
+      "dataset": "CitySim Table 3",
+      "model": "T-FVD",
+      "variable": "Arc spacing",
+      "expected": 2.354052436720675,
+      "actual": 2.354052436720675,
+      "absolute_difference": 0.0
+    },
+    {
+      "dataset": "CitySim Table 3",
+      "model": "T-FVD",
+      "variable": "Velocity",
+      "expected": 0.7358316597660841,
+      "actual": 0.7358316597660841,
+      "absolute_difference": 0.0
+    },
+    {
+      "dataset": "CitySim Table 3",
+      "model": "T-FVD",
+      "variable": "Acceleration",
+      "expected": 0.95482192449368,
+      "actual": 0.95482192449368,
+      "absolute_difference": 0.0
+    }
+  ]
+}

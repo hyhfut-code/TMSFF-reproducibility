@@ -25,6 +25,9 @@ not contain every internal reviewer-audit project.
 - `outputs/R1_1/analysis/`: per-trajectory block geometry, parameter-free
   constant-velocity diagnostics, equal-horizon fixed-parameter results, paired
   statistics and audit metadata supporting Fig. E1.
+- `outputs/rate_limiter/`: aggregate Table C14 results, the two Fig. C9 panels,
+  the tested-setting summary, baseline identity check and public metadata for
+  the target-heading slew-rate diagnostic.
 - `requirements.txt`: scientific Python dependencies.
 - `SHA256SUMS.txt`: checksums for the selected release files.
 
@@ -36,6 +39,7 @@ the selected figure commands were checked with Python 3.12. Install dependencies
 ```bash
 python -m pip install -r requirements.txt
 python scripts/validate_package.py
+python scripts/test_rate_limiter_audit.py
 ```
 
 Reproduce Figs. 15, 16, 21, 22, 23, 24, C5 and E1:
@@ -115,6 +119,9 @@ auxiliary diagnostic project is included in this release.
 - **Fig. C6:** Table 1, `S_c = 15.8 m`; branch-discontinuity audit.
 - **Fig. C7:** Table 1, `S_c = 15.8 m`; CitySim spacing/path-replay diagnostic.
 - **Fig. C8:** Table 1, `S_c = 15.8 m`; CitySim heading-noise audit.
+- **Fig. C9 and Table C14:** Table 1, `S_c = 15.8 m`; closed-loop target-heading
+  slew-rate diagnostic. The hard-switch formulation remains the manuscript
+  baseline, and no model parameter is recalibrated.
 - **Fig. E1:** the constant-velocity reference is parameter-free; TMSFF and
   AV-IDM use the pre-specified Table E1 seed-42 estimates without refitting.
   Late-calibration and holdout windows are duration matched per trajectory.
@@ -154,6 +161,44 @@ and the non-target-track route-reconstruction provenance.
 The distributed pair manifest preserves the original bytes matching its source
 hash. Archived calibration metadata retains historical run paths and software
 timings; the current file locations are those given in this README and protocol.
+
+## Table C14 and Fig. C9 rate-limiter audit
+
+The public script inserts a symmetric rate limit on the branch-selected target
+heading before cubic-path construction. It does not post-process the final
+steering command, alter the longitudinal equations, or recalibrate model
+parameters. The first limited target is initialized from the raw target rather
+than from zero. Rates of 0.5, 1, 2, 4 and 8 rad/s are tested; 0.5 rad/s is the
+most restrictive tested setting reported in Table C14 and Fig. C9.
+
+The unit tests and command-line interface can be checked without restricted
+data:
+
+```bash
+python scripts/test_rate_limiter_audit.py
+python scripts/run_rate_limiter_audit.py --help
+```
+
+For a full numerical rerun, place the authorized inputs at:
+
+```text
+external_data/private_normalized_observed_trajectories.csv
+external_data/IntersectionA_cleaned.csv
+```
+
+Then run:
+
+```bash
+python scripts/run_rate_limiter_audit.py
+```
+
+The generated files are written to `reproduced_outputs/rate_limiter/`. The
+archived aggregate outputs are in `outputs/rate_limiter/`: Table C14(a) maps to
+`Table_C14a_RMSE_effect.csv`; Table C14(b) maps to
+`Table_C14b_steering_change.csv`; the left and right panels of Fig. C9 map to
+`Fig_C9a_transition.png` and `Fig_C9b_tradeoff.png`, respectively. Both PNGs
+use Times New Roman and 600 dpi. The source-data hashes and public provenance
+record are in `rate_limiter_metadata_public.json`.
 
 ## Full M11 numerical rerun
 
@@ -204,5 +249,6 @@ files are ignored by Git. The supplied validator checks release checksums,
 required files, seed coverage, the R1-1 audit inventory and the
 figure-to-parameter record.
 
-Repository URL stated in the manuscript and used for this release:
-<https://github.com/hyhfut-code/TMSFF-reproducibility>.
+Repository URL stated in the manuscript:
+<https://github.com/hyhfu-code/TMSFF-reproducibility>. The repository's public
+accessibility must be checked after uploading this selected release.

@@ -61,7 +61,7 @@ def plot_model(logs: pd.DataFrame, model: str, output_name: str) -> None:
         color="#333333",
         linewidth=0.9,
         linestyle=":",
-        label="Legacy 10-generation limit",
+        label="Generation 10 reference",
     )
     axis.set_xlabel("Generation")
     axis.set_ylabel("Best 2D trajectory RMSE (m)")

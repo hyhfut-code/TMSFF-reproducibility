@@ -12,6 +12,79 @@ C1–C2, the corrected 13-trajectory Fig. C5 and the Reviewer 1 Comment 1 tempor
 block diagnostic (Fig. E1) are additionally included. This selected release does
 not contain every internal reviewer-audit project.
 
+## Release R4 complete model 2026-10-22
+
+This release supports the complete-model comparison in the current R4
+manuscript. `RELEASE.json` records the reviewed manuscript hash, model-code hashes,
+figure hashes and the archived comparison summaries. `CHANGELOG.md` records
+the material implementation and result changes relative to the preceding
+public version.
+
+The M11 TMSFF implementation uses the 15.8 m LOS/leader-heading switch,
+Appendix B rotation, general cubic endpoint slopes, a 0.5 m IDM net-gap
+floor, 24-node Gauss–Legendre quadrature and 32 bisection iterations.
+Forward local separation and directed endpoint headings are checked;
+inadmissible candidates receive a fixed large objective penalty.
+
+The comparison uses 38 CitySim leader–follower pairs, a 70/30 temporal
+split, independently initialized blocks, five seeds 42–46, population 100,
+80 generations and 8,100 objective evaluations per model and seed.
+The five-seed calibration/holdout objectives are 1.907173/1.024059 m for
+TMSFF and 1.754120/2.065741 m for AV-IDM. For the pre-specified seed-42
+estimates, pure position RMSE averages 0.870793/1.799965 m, with TMSFF
+lower on 33 of 38 pairs. Complete seed-level results are supplied.
+
+The objective in manuscript Eq. (35a) takes the square root after averaging
+the per-trajectory mean penalized squared losses with equal trajectory
+weights. Tables 2–3 use their separately defined arithmetic mean of
+trajectory-level RMSE. Pure position RMSE excludes the station-range
+penalty and must not be interchanged with the penalized objective.
+For matched windows, TMSFF pure-position medians are 0.634580 and
+0.781731 m, with paired p=0.1842915901; its aggregate penalized objectives
+are 0.823998 and 1.018729 m. Non-rejection does not establish equivalence.
+
+The CitySim comparison advances at 30 Hz. The separate Hefei runtime
+benchmark uses a 0.1 s interval and does not measure the compiled M11
+kernel. Table 1 fixed-parameter validation, Table C2 optimizer comparisons
+and Table E1 CitySim comparison use distinct parameter contexts.
+
+The full-block Table 1 validation LOS proportions do not describe the
+independently restarted Table E1 comparison. The additional directed-heading
+audit covers all 20,178 updates in Table B1; all were admissible, and Case 1
+was untriggered. The processed records are in `outputs/M11/review_v2_domain/`.
+This does not empirically validate an untriggered branch.
+
+Check the release without provider data:
+
+```bash
+python scripts/validate_package.py
+python scripts/test_corrected_tmsff.py
+python scripts/test_audit_r1_1.py
+python scripts/test_rate_limiter_audit.py
+```
+
+After preparing authorized CitySim caches as described below, regenerate
+the complete numerical comparison and matched-window diagnostics using:
+
+```bash
+python scripts/run_m11_calibration.py --models TMSFF AV-IDM --output reproduced_outputs/M11/common_protocol
+python scripts/run_m11_expanded_bound_audit.py
+python scripts/analyze_m11_results.py --source-output reproduced_outputs/M11 --output reproduced_outputs/M11/analysis
+python scripts/audit_r1_1.py --m11-results reproduced_outputs/M11 --output-dir reproduced_outputs/R1_1/analysis
+python scripts/audit_raw_position_rmse.py --m11-results reproduced_outputs/M11 --output-dir reproduced_outputs/R1_1/analysis
+```
+
+The supplied release contains the verified existing AV-IDM estimates and the
+complete-model TMSFF estimates; the full calibration command above runs
+both models. Raw provider data and local numerical caches are not included.
+
+The Table B1 directed-heading audit additionally requires the authorized
+Hefei inputs:
+
+```bash
+python scripts/audit_fixed_parameter_domain.py --cache reproduced_outputs/cache/m11_citysim_cache_k16.npz --hefei-input external_data/private_normalized_observed_trajectories.csv
+```
+
 ## Contents
 
 - `scripts/`: executable scripts, model kernels, the frozen parameter record,
@@ -127,6 +200,12 @@ auxiliary diagnostic project is included in this release.
   Late-calibration and holdout windows are duration matched per trajectory.
 
 ## Data availability
+
+The trajectory-level calibration inputs needed to regenerate the headline
+Table 1 parameter set under the original preprocessing and calibration
+protocol are no longer available in a form permitting faithful
+re-estimation. The released Table 1 settings are frozen values; the
+single-pair optimizer audit does not regenerate that parameter set.
 
 The 13 Hefei validation trajectories are distinct observed trajectories, as
 confirmed by the author. Their raw UAV records cannot be publicly redistributed

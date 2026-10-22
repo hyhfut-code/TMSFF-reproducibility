@@ -1,0 +1,49 @@
+{
+  "release_id": "R4-complete-model-2026-10-22",
+  "baseline_public_commit": "bf0ddc57c5191a76feda57a6064cf7018671355e",
+  "objective_equation": "35a (definitions 35b–35d)",
+  "updated_manuscript_items": [
+    "Table 4",
+    "Table E1",
+    "Table E4",
+    "Fig. 23",
+    "Fig. 24",
+    "Fig. E1"
+  ],
+  "comparison_summary": [
+    {
+      "model": "AV-IDM",
+      "seeds": "5",
+      "calibration_objective_mean_m": "1.754120357926628",
+      "calibration_objective_sd_m": "0.07882285514039093",
+      "holdout_objective_mean_m": "2.0657413606918076",
+      "holdout_objective_sd_m": "0.06236961708872613",
+      "mean_elapsed_seconds": "89.04176173998857"
+    },
+    {
+      "model": "TMSFF",
+      "seeds": "5",
+      "calibration_objective_mean_m": "1.9071731097953883",
+      "calibration_objective_sd_m": "0.0011702369109010012",
+      "holdout_objective_mean_m": "1.0240594760153567",
+      "holdout_objective_sd_m": "0.0074312674924045825",
+      "mean_elapsed_seconds": "23.835671899979936"
+    }
+  ],
+  "critical_code_sha256": {
+    "scripts/m11_models.py": "5313d1e0cbddf6700da1ef6ef9b1f166d91bf0d4072b6cf9dca35b8e4edbc2b3",
+    "scripts/citysim_core.py": "4dbe09e730eb09f1ff5faab6334a0dd48365b8a8f46e02d6e1b915613c753db2",
+    "scripts/frozen_parameters.json": "ab1d4746701305959624be8ca6a0d15b38b6c79637d1413dfa500d03fd32fcc3",
+    "scripts/plot_figure_e1.py": "b96ed98bef316a6474010d2e83278b51351adf250a1d57da695996125b2459f8"
+  },
+  "figure_sha256": {
+    "outputs/Fig_23.png": "27316fab66ee8866ae8eeb2aea728cff9918a14b9dd5343b315b7b13e1d6a3d9",
+    "outputs/Fig_24.png": "15e55dcb6eb5bd8e928026b16a73f4a62cea151225dfd95d7e4432f8815d6f6c",
+    "outputs/Fig_E1.png": "56583dcff975ddcee60df7622fc1fde1b39d77c89b550d588c5a93d76d3cfe8f"
+  },
+  "raw_provider_data_distributed": false,
+  "local_numerical_cache_distributed": false,
+  "material_changes_documented_in": "CHANGELOG.md",
+  "reviewed_manuscript_sha256": "5e1210f6a29ee82f90a142912714d5a237fac0f5a932f73d3087385a7724d30a",
+  "reviewed_manuscript_date": "2026-10-22"
+}

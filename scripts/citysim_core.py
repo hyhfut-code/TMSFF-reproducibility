@@ -2,8 +2,7 @@
 
 This script broadens the original single-trajectory CitySim check without
 recalibrating on CitySim.  The T-IDM and T-FVD parameters are fixed to their
-respective seed-42 values obtained under the same Hefei calibration protocol
-and reported in Appendix Table C2 of the revised manuscript.
+respective Hefei-calibrated values reported in Table 1 of the revised manuscript.
 
 The workflow is intentionally auditable:
 1. identify complete turning trajectories from the cleaned CitySim file;
@@ -35,17 +34,14 @@ VEHICLE_LENGTH_M = 5.0
 SHORT_RANGE_THRESHOLD_M = 15.8
 GAUSS_NODES, GAUSS_WEIGHTS = np.polynomial.legendre.leggauss(24)
 
-# Seed-42 T-IDM calibration under the common Hefei protocol; no CitySim
-# recalibration.  The full-precision values are reported in Appendix Table C2.
+# Table 1 T-IDM calibration on Hefei; no CitySim recalibration.
 HEFEI_TIDM_PARAMETERS = {'a_max_mps2': 2.81, 'b_comfort_mps2': 2.96, 'time_gap_s': 1.28, 'desired_speed_mps': 18.06, 'minimum_safe_arc_spacing_m': 4.81}
 
-# Seed-42 T-FVD calibration obtained with the same Hefei data split, objective,
-# optimizer, population size, generation count, and parameter bounds as T-IDM.
+# Table 1 T-FVD calibration on Hefei; no CitySim recalibration.
 HEFEI_TFVD_PARAMETERS = {'kappa': 0.28, 'lambda_speed': 0.3, 'maximum_speed_mps': 10.9, 'safety_arc_spacing_m': 9.11}
 
 PARAMETER_SOURCE = (
-    "Respective seed-42 Hefei calibrations obtained under the common protocol "
-    "and reported in Appendix Table C2"
+    "Respective Hefei-calibrated Table 1 parameter sets; no CitySim recalibration"
 )
 
 MODEL_NAMES = ("T-IDM", "T-FVD")
@@ -111,12 +107,14 @@ def coordinate_system_transformation(
 
     if abs(angle_gap / 2.0 - np.pi / 2.0) <= tiny_angle:
         turning_angle = (angle_follower + angle_leader) / 2.0 - np.pi
-        if angle_follower >= angle_leader:
-            new_angle_follower = angle_gap / 2.0 + tiny_angle - np.pi
-            new_angle_leader = np.pi - angle_gap / 2.0 - tiny_angle
-        else:
-            new_angle_follower = np.pi - angle_gap / 2.0 - tiny_angle
-            new_angle_leader = angle_gap / 2.0 + tiny_angle - np.pi
+        # Eq. (4)/(B3)-(B4): one modulo-pi and clipping rule for slopes.
+        # Case 1 was not triggered in the archived validation trajectories.
+        new_angle_follower = float(np.clip(
+            (angle_follower - turning_angle + np.pi / 2.0) % np.pi - np.pi / 2.0,
+            -np.pi / 2.0 + tiny_angle, np.pi / 2.0 - tiny_angle))
+        new_angle_leader = float(np.clip(
+            (angle_leader - turning_angle + np.pi / 2.0) % np.pi - np.pi / 2.0,
+            -np.pi / 2.0 + tiny_angle, np.pi / 2.0 - tiny_angle))
     elif angle_gap >= np.pi:
         turning_angle = (angle_follower + angle_leader) / 2.0 - np.pi
         if angle_follower >= angle_leader:

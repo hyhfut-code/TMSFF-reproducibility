@@ -179,7 +179,7 @@ def plot_figure(data_dir: Path) -> plt.Figure:
     ax = axes[1, 1]
     summary_lookup = summary_df.set_index("model_or_reference")
     series = [
-        ("Constant velocity", "constant_velocity_raw", DARK_GRAY, "s", "--"),
+        ("Constant velocity", "constant_velocity_penalized", DARK_GRAY, "s", "--"),
         ("TMSFF", "TMSFF_seed42_penalized", BLUE, "o", "-"),
         ("AV-IDM", "AV-IDM_seed42_penalized", ORANGE, "^", "-"),
     ]

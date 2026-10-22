@@ -340,78 +340,94 @@ def avidm_perception_and_acceleration(
     )
 
 
+# This fragment is inserted into an isolated copy of the released M11 module.
+# It follows the manuscript local-frame cubic, threshold rule and the main
+# validation implementation's 24-node quadrature / 32-step bisection.
+SHORT_RANGE_THRESHOLD_M = 15.8
+ANGLE_EPS_RAD = 0.005
+GEOMETRY_EPS_M = 1e-6
+CANONICAL_GAUSS_NODES, CANONICAL_GAUSS_WEIGHTS = np.polynomial.legendre.leggauss(24)
+
+
 @njit(cache=True)
-def cubic_coefficients(
-    follower_x: float,
-    follower_y: float,
-    follower_heading: float,
-    leader_x: float,
-    leader_y: float,
-    leader_heading: float,
-) -> tuple[float, float, float, float]:
+def slope_angle(angle):
+    wrapped = (angle + 0.5 * PI) % PI - 0.5 * PI
+    return clip(wrapped, -0.5 * PI + ANGLE_EPS_RAD, 0.5 * PI - ANGLE_EPS_RAD)
+
+
+@njit(cache=True)
+def cubic_coefficients(follower_x, follower_y, follower_heading,
+                       leader_x, leader_y, leader_heading):
+    follower_heading = wrap_angle(follower_heading)
+    leader_heading = wrap_angle(leader_heading)
     dx = leader_x - follower_x
     dy = leader_y - follower_y
-    cos_h = math.cos(follower_heading)
-    sin_h = math.sin(follower_heading)
-    local_x = cos_h * dx + sin_h * dy
-    local_y = -sin_h * dx + cos_h * dy
-    local_x = max(local_x, 0.5)
-    relative_heading = clip(wrap_angle(leader_heading - follower_heading), -1.25, 1.25)
-    target_slope = math.tan(relative_heading)
-    a2 = (3.0 * local_y - target_slope * local_x) / (local_x * local_x)
-    a3 = (target_slope * local_x - 2.0 * local_y) / (
-        local_x * local_x * local_x
-    )
-    return local_x, local_y, a2, a3
+    distance = math.hypot(dx, dy)
+    if distance <= GEOMETRY_EPS_M:
+        return 0., 0., 0., 0., 0., False
+    gap = abs(leader_heading - follower_heading)
+    if abs(0.5 * gap - 0.5 * PI) <= ANGLE_EPS_RAD or gap >= PI:
+        rotation = 0.5 * (leader_heading + follower_heading) - PI
+    else:
+        rotation = 0.5 * (leader_heading + follower_heading)
+    local_x = math.cos(rotation) * dx + math.sin(rotation) * dy
+    local_y = -math.sin(rotation) * dx + math.cos(rotation) * dy
+    if local_x <= GEOMETRY_EPS_M:
+        rotation = math.atan2(dy, dx)
+        local_x = distance
+        local_y = 0.
+    target = math.atan2(dy, dx) if distance <= SHORT_RANGE_THRESHOLD_M else leader_heading
+    physical_start = wrap_angle(follower_heading - rotation)
+    physical_target = wrap_angle(target - rotation)
+    # The forward graph cannot represent a backwards directed endpoint tangent.
+    # Clipping is a slope regularization, not an invertible heading transform.
+    # Such a state is outside the propagation domain used in this experiment.
+    bound = 0.5 * PI - ANGLE_EPS_RAD
+    if abs(physical_start) > bound + 1e-12 or abs(physical_target) > bound + 1e-12:
+        return local_x, 0., 0., 0., rotation, False
+    a1 = math.tan(slope_angle(physical_start))
+    target_slope = math.tan(slope_angle(physical_target))
+    a2 = (3.0 * local_y - (2.0 * a1 + target_slope) * local_x) / (local_x * local_x)
+    a3 = ((a1 + target_slope) * local_x - 2.0 * local_y) / (local_x * local_x * local_x)
+    return local_x, a1, a2, a3, rotation, True
 
 
 @njit(cache=True)
-def cubic_arc_length(a2: float, a3: float, upper: float) -> float:
-    if upper <= 0.0:
-        return 0.0
-    nodes = (
-        -0.9602898564975363,
-        -0.7966664774136267,
-        -0.5255324099163290,
-        -0.1834346424956498,
-        0.1834346424956498,
-        0.5255324099163290,
-        0.7966664774136267,
-        0.9602898564975363,
-    )
-    weights = (
-        0.1012285362903763,
-        0.2223810344533745,
-        0.3137066458778873,
-        0.3626837833783620,
-        0.3626837833783620,
-        0.3137066458778873,
-        0.2223810344533745,
-        0.1012285362903763,
-    )
+def cubic_arc_length(a1, a2, a3, upper):
+    if upper <= 0.:
+        return 0.
     half = 0.5 * upper
-    total = 0.0
-    for index in range(8):
-        x = half * (nodes[index] + 1.0)
-        slope = 2.0 * a2 * x + 3.0 * a3 * x * x
-        total += weights[index] * math.sqrt(1.0 + slope * slope)
+    total = 0.
+    for index in range(24):
+        x = half * (CANONICAL_GAUSS_NODES[index] + 1.)
+        slope = a1 + 2. * a2 * x + 3. * a3 * x * x
+        total += CANONICAL_GAUSS_WEIGHTS[index] * math.sqrt(1. + slope * slope)
     return half * total
 
 
 @njit(cache=True)
-def advance_cubic(a2: float, a3: float, path_x: float, distance: float) -> tuple[float, float, float]:
-    if distance <= 0.0:
-        return 0.0, 0.0, 0.0
-    maximum_x = max(path_x, distance + 0.5)
-    x = min(distance, maximum_x)
-    for _ in range(5):
-        residual = cubic_arc_length(a2, a3, x) - distance
-        slope = 2.0 * a2 * x + 3.0 * a3 * x * x
-        derivative = math.sqrt(1.0 + slope * slope)
-        x = clip(x - residual / max(derivative, 1e-8), 0.0, maximum_x)
-    y = a2 * x * x + a3 * x * x * x
-    slope = 2.0 * a2 * x + 3.0 * a3 * x * x
-    return x, y, math.atan(slope)
+def advance_cubic(a1, a2, a3, path_x, distance):
+    if distance <= 0.:
+        return 0., 0., math.atan(a1)
+    upper = min(max(path_x, 1.), 5.)
+    while cubic_arc_length(a1, a2, a3, upper) < distance:
+        upper *= 1.5
+        if upper > max(20., 2. * path_x):
+            return math.nan, math.nan, math.nan
+    lower = 0.
+    for _ in range(32):
+        midpoint = 0.5 * (lower + upper)
+        if cubic_arc_length(a1, a2, a3, midpoint) < distance:
+            lower = midpoint
+        else:
+            upper = midpoint
+    x = 0.5 * (lower + upper)
+    y = a1 * x + a2 * x * x + a3 * x * x * x
+    heading_local = math.atan(a1 + 2. * a2 * x + 3. * a3 * x * x)
+    return x, y, heading_local
+
+
+
 
 
 @njit(cache=True)
@@ -422,9 +438,7 @@ def tidm_acceleration(
     center_arc_gap: float,
 ) -> float:
     a_max, b_comfort, time_gap, desired_speed, minimum_gap = parameters
-    net_gap = center_arc_gap - VEHICLE_LENGTH_M
-    if net_gap <= 0.25:
-        return LONG_ACCEL_MIN
+    net_gap = max(center_arc_gap - VEHICLE_LENGTH_M, 0.5)
     closing_speed = speed - leader_speed
     desired_gap = minimum_gap + max(
         0.0,
@@ -491,7 +505,7 @@ def block_objective_tmsff(
         leader_y = leader[pair_index, time_index, 1]
         leader_speed = max(leader[pair_index, time_index, 2], 0.0)
         leader_heading = leader[pair_index, time_index, 3]
-        path_x, _, a2, a3 = cubic_coefficients(
+        path_x, a1, a2, a3, rotation, valid = cubic_coefficients(
             x,
             y,
             heading,
@@ -499,16 +513,18 @@ def block_objective_tmsff(
             leader_y,
             leader_heading,
         )
-        arc_gap = cubic_arc_length(a2, a3, path_x)
+        if not valid:
+            return 1e12
+        arc_gap = cubic_arc_length(a1, a2, a3, path_x)
         acceleration = tidm_acceleration(parameters, speed, leader_speed, arc_gap)
         acceleration = max(acceleration, -speed / dt)
         travel = max(0.0, speed * dt + 0.5 * acceleration * dt * dt)
-        local_x, local_y, heading_change = advance_cubic(a2, a3, path_x, travel)
-        cos_h = math.cos(heading)
-        sin_h = math.sin(heading)
+        local_x, local_y, heading_local = advance_cubic(a1, a2, a3, path_x, travel)
+        cos_h = math.cos(rotation)
+        sin_h = math.sin(rotation)
         x += cos_h * local_x - sin_h * local_y
         y += sin_h * local_x + cos_h * local_y
-        heading = wrap_angle(heading + heading_change)
+        heading = wrap_angle(rotation + heading_local)
         speed = max(0.0, speed + acceleration * dt)
         if not (math.isfinite(x) and math.isfinite(y) and math.isfinite(speed)):
             return 1e12
@@ -776,7 +792,7 @@ def trace_tmsff(
         trace[local_index, 4] = acceleration
         if time_index >= stop - 1:
             break
-        path_x, _, a2, a3 = cubic_coefficients(
+        path_x, a1, a2, a3, rotation, valid = cubic_coefficients(
             x,
             y,
             heading,
@@ -784,7 +800,10 @@ def trace_tmsff(
             leader[pair_index, time_index, 1],
             leader[pair_index, time_index, 3],
         )
-        arc_gap = cubic_arc_length(a2, a3, path_x)
+        if not valid:
+            trace[:, :] = np.nan
+            return trace
+        arc_gap = cubic_arc_length(a1, a2, a3, path_x)
         acceleration = tidm_acceleration(
             parameters,
             speed,
@@ -793,12 +812,12 @@ def trace_tmsff(
         )
         acceleration = max(acceleration, -speed / dt)
         travel = max(0.0, speed * dt + 0.5 * acceleration * dt * dt)
-        local_x, local_y, heading_change = advance_cubic(a2, a3, path_x, travel)
-        cos_h = math.cos(heading)
-        sin_h = math.sin(heading)
+        local_x, local_y, heading_local = advance_cubic(a1, a2, a3, path_x, travel)
+        cos_h = math.cos(rotation)
+        sin_h = math.sin(rotation)
         x += cos_h * local_x - sin_h * local_y
         y += sin_h * local_x + cos_h * local_y
-        heading = wrap_angle(heading + heading_change)
+        heading = wrap_angle(rotation + heading_local)
         speed = max(0.0, speed + acceleration * dt)
         trace[local_index, 5] = arc_gap
         trace[local_index, 6] = arc_gap - VEHICLE_LENGTH_M

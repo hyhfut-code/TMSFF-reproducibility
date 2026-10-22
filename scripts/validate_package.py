@@ -47,6 +47,15 @@ def main():
               'outputs/rate_limiter/rate_limiter_summary.md',
               'outputs/Fig_21_recalibrated.tiff',
               'outputs/FigC5_fresh_rerun_metadata.json']
+    required.extend(['CHANGELOG.md','RELEASE.json','scripts/test_corrected_tmsff.py',
+                     'scripts/audit_raw_position_rmse.py','scripts/audit_fixed_parameter_domain.py',
+                     'outputs/M11/implementation_correction.json',
+                     'outputs/M11/kernel_equivalence_checks.json',
+                     'outputs/M11/recalculation_validation.json',
+                     'outputs/M11/review_v2_domain/audit_results.json',
+                     'outputs/M11/review_v2_domain/fixed_parameter_directed_domain_per_trajectory.csv',
+                     'outputs/R1_1/analysis/equal_horizon_raw_position_rmse.csv',
+                     'outputs/R1_1/analysis/equal_horizon_raw_position_paired_tests.csv'])
     for i in range(9,25):
         name=f'Fig_{i:02d}_recalibrated.png' if i in (15,16,21,22) else f'Fig_{i:02d}.png'
         required.append('outputs/'+name)
@@ -124,6 +133,22 @@ def main():
     assert all(x in readme for x in ('Table 1','Table C2','Table E1','Figs. C3','Fig. C8','Fig. C9','Table C14','Fig. E1','R1-1'))
     assert len(list((ROOT/'outputs').glob('*.png')))==20
     assert len(list(rate_dir.glob('*.png')))==2
+    release=json.loads((ROOT/'RELEASE.json').read_text(encoding='utf-8'))
+    assert release['release_id']=='R4-complete-model-2026-10-22'
+    for name,digest in release['critical_code_sha256'].items():assert sha(ROOT/name)==digest
+    for name,digest in release['figure_sha256'].items():assert sha(ROOT/name)==digest
+    global_summary=rows(ROOT/'outputs/M11/analysis/five_seed_global_objective_summary.csv')
+    for archived in global_summary:
+        rr=[r for r in runs if r['model']==archived['model']]
+        for field in ('calibration_objective','holdout_objective'):
+            observed=sum(float(r[field+'_m']) for r in rr)/len(rr)
+            assert abs(observed-float(archived[field+'_mean_m']))<1e-10
+    tmsff=[r for r in global_summary if r['model']=='TMSFF'][0]
+    assert abs(float(tmsff['calibration_objective_mean_m'])-1.9071731097953883)<1e-10
+    assert abs(float(tmsff['holdout_objective_mean_m'])-1.0240594760153567)<1e-10
+    release_summary={r['model']:r for r in release['comparison_summary']}
+    for r in global_summary:
+        assert r==release_summary[r['model']], 'Release summary does not match the archived CSV'
     print(f'PASS: {len(manifest)} checksummed files, {len(required)} required paths, 22 archived PNGs, complete five-seed M11, R1-1 and rate-limiter outputs.')
 
 if __name__=='__main__':main()

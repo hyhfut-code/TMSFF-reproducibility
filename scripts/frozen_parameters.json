@@ -54,14 +54,14 @@
     }
   },
   "table_e1_seed42_citysim_parameters": {
-    "provenance": "Table E1; CitySim common-protocol audit; pre-specified seed 42",
+    "provenance": "Corrected complete thresholded TMSFF; original CitySim protocol; seed 42; 2026-10-20",
     "seed": 42,
     "TMSFF": {
-      "a_max": 1.794,
-      "b_comfort": 2.1609,
-      "T": 0.4692,
-      "V0": 10.9783,
-      "s0": 2.3328
+      "a_max": 1.830651537656959,
+      "b_comfort": 2.859305200221094,
+      "T": 0.5041059798642351,
+      "V0": 10.98838737264038,
+      "s0": 2.279730691356599
     },
     "AV-IDM": {
       "C_front": 2.7488,

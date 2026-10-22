@@ -1,0 +1,15 @@
+{
+  "ga_runs.csv_AVIDM_preserved": true,
+  "ga_parameter_estimates.csv_AVIDM_preserved": true,
+  "ga_convergence.csv_AVIDM_preserved": true,
+  "five_seeds_and_original_budget": true,
+  "objective_trace_maximum_MSE_difference": 5.329070518200751e-15,
+  "checked_best_run_updates": 44665,
+  "Case1_updates": 0,
+  "Case2_updates": 2275,
+  "Case3_updates": 42390,
+  "LOS_fallback_updates": 0,
+  "minimum_local_x_m": 6.44869242302784,
+  "all_accepted_best_run_states_admissible": true,
+  "AVIDM_kernel_functions_unchanged": true
+}

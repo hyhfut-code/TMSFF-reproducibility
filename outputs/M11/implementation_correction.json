@@ -1,0 +1,19 @@
+{
+  "source_commit": "bf0ddc57c5191a76feda57a6064cf7018671355e",
+  "original_model_sha256": "0cba7393dfa4ddb6766b37188cc52133d57f278ffc29a933eb9a4d65c1c3e6ae",
+  "corrected_model_sha256": "5313d1e0cbddf6700da1ef6ef9b1f166d91bf0d4072b6cf9dca35b8e4edbc2b3",
+  "cache_sha256": {
+    "m11_citysim_cache_k16.npz": "f1c51190ccd19fbd0430381ae34f04a9a6829d6587503d2dc37afb162bc2b731",
+    "m11_citysim_cache_k80.npz": "88528008c455eee883abe41cae7d364e28b860a39c7a94ced312c7e6c5b28a16"
+  },
+  "changes": [
+    "15.8m LOS / leader-heading branch",
+    "Appendix-B rotation and general cubic start slope",
+    "unified wrapped slope angles; forward finite-slope propagation domain",
+    "24-node Gauss-Legendre quadrature; 32-step bisection",
+    "main-validation 0.5m IDM gap floor",
+    "coincident or inadmissible headings receive pre-existing invalid-candidate objective scale; no claimed stateful retention"
+  ],
+  "archived_validation_helper_case1": "Aligned to the common Eq. (4)/(B3)-(B4) slope rule. Other rotation branches and normal propagation code remain unchanged.",
+  "archived_validation_helper_sha256": "4dbe09e730eb09f1ff5faab6334a0dd48365b8a8f46e02d6e1b915613c753db2"
+}

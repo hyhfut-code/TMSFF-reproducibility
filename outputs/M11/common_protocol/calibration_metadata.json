@@ -1,8 +1,7 @@
 {
-  "cache": "data/m11_citysim_cache_k16.npz",
+  "cache": "reproduced_outputs/cache/m11_citysim_cache_k16.npz",
   "models": [
-    "TMSFF",
-    "AV-IDM"
+    "TMSFF"
   ],
   "seeds": [
     42,
@@ -34,5 +33,7 @@
   "actual_evaluations_per_run": 8100,
   "trajectory_count": 38,
   "calibration_frames": 6289,
-  "holdout_frames": 2720
+  "holdout_frames": 2720,
+  "AV_IDM_results": "Retained from the original frozen protocol; source functions and archived five-seed values verified unchanged.",
+  "TMSFF_recalibrated_after_kernel_correction": true
 }

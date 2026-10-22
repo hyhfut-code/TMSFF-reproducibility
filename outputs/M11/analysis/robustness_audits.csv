@@ -1,4 +1,4 @@
-audit,case,calibration_objective_m,holdout_objective_m
+﻿audit,case,calibration_objective_m,holdout_objective_m
 dynamic-candidate sensitivity,K16 calibration implementation,1.7694643941332153,2.0484684422822887
 dynamic-candidate sensitivity,all visible vehicles,1.7746099278043932,2.040775716525918
 parameter-bound sensitivity,"published original bounds, seed 42",1.7694643941332153,2.0484684422822887

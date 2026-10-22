@@ -1,5 +1,5 @@
 {
-  "created_utc": "2026-10-14T14:34:06.130008+00:00",
+  "created_utc": "2026-10-20T13:22:05.208043+00:00",
   "purpose": "Reviewer 1 Comment 1 temporal-block difficulty audit",
   "preflight": {
     "trajectory_count": 38,
@@ -28,5 +28,6 @@
     "r1_1_equal_horizon_paired_comparisons.csv"
   ],
   "model_refitting_performed": false,
-  "frozen_split_changed": false
+  "frozen_split_changed": false,
+  "base_TMSFF_parameters": "Corrected complete-model five-seed calibration, with seed 42 fixed for the matched-window diagnostic."
 }

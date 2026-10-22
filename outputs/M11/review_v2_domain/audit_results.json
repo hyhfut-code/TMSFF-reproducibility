@@ -1,0 +1,58 @@
+{
+  "fixed_parameter_domain_audit": [
+    {
+      "dataset": "CitySim",
+      "model": "T-FVD",
+      "trajectories": 38,
+      "updates": 8971,
+      "outside_directed_domain": 0,
+      "maximum_start_angle_rad": 0.3920639426843539,
+      "maximum_target_angle_rad": 0.39206394268435374,
+      "minimum_local_x_m": 4.2322660808837895,
+      "Case1": 0,
+      "Case2": 423,
+      "Case3": 8548
+    },
+    {
+      "dataset": "CitySim",
+      "model": "T-IDM",
+      "trajectories": 38,
+      "updates": 8971,
+      "outside_directed_domain": 0,
+      "maximum_start_angle_rad": 0.5964102375134304,
+      "maximum_target_angle_rad": 0.5964102375134306,
+      "minimum_local_x_m": 8.878290534849043,
+      "Case1": 0,
+      "Case2": 597,
+      "Case3": 8374
+    },
+    {
+      "dataset": "Hefei",
+      "model": "T-FVD",
+      "trajectories": 13,
+      "updates": 1118,
+      "outside_directed_domain": 0,
+      "maximum_start_angle_rad": 0.257592098028235,
+      "maximum_target_angle_rad": 0.25759209802823513,
+      "minimum_local_x_m": 15.128151665049785,
+      "Case1": 0,
+      "Case2": 0,
+      "Case3": 1118
+    },
+    {
+      "dataset": "Hefei",
+      "model": "T-IDM",
+      "trajectories": 13,
+      "updates": 1118,
+      "outside_directed_domain": 0,
+      "maximum_start_angle_rad": 0.27111690072509403,
+      "maximum_target_angle_rad": 0.271116900725094,
+      "minimum_local_x_m": 15.287556442355152,
+      "Case1": 0,
+      "Case2": 0,
+      "Case3": 1118
+    }
+  ],
+  "no_new_calibration": true,
+  "original_manuscript_sha256": "d4ec35efee152cffe101be798d6b9f47d6d89f7bdf4fa260f960789dd9a96a7c"
+}

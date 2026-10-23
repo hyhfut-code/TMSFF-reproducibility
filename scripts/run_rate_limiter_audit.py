@@ -1014,6 +1014,16 @@ def plot_transition_example(examples: pd.DataFrame, output: Path) -> None:
     plt.close(fig)
 
 
+def format_relative_change_percent(value: float) -> str:
+    """Keep small nonzero changes distinct from exact zero in display output."""
+    value = float(value)
+    if value == 0.0:
+        return "0.0000%"
+    if abs(value) < 0.0001:
+        return "negligible"
+    return f"{value:+.4f}%"
+
+
 def write_report(
     selected_rate: float,
     decision: pd.DataFrame,
@@ -1028,19 +1038,22 @@ def write_report(
         "# Rate-limiter audit summary",
         "",
         f"Selected diagnostic target-heading slew-rate limit: {selected_rate:g} rad/s.",
-        f"Worst absolute change across the 16 dataset/model/RMSE comparisons: {decision_row['worst_absolute_rmse_change_percent']:.2f}%.",
+        f"Worst absolute change across the 16 dataset/model/RMSE comparisons: {decision_row['worst_absolute_rmse_change_percent']:.4f}%.",
         f"Median reduction in the maximum steering-command step: {decision_row['median_max_step_reduction_percent']:.2f}%.",
+        "",
+        "Relative changes use unrounded values and are displayed to four decimal places. "
+        "Absolute relative changes below 0.0001% are labeled negligible; this does not imply exact equality.",
         "",
         "## Selected-setting results",
         "",
     ]
     for _, row in selected.iterrows():
         lines.append(
-            f"- {row['dataset']} / {row['model']}: heading {row['equal_trajectory_mean_heading_angle']:.4f} rad "
-            f"({row['relative_change_percent_heading_angle']:+.2f}%), spacing {row['equal_trajectory_mean_arc_spacing']:.4f} m "
-            f"({row['relative_change_percent_arc_spacing']:+.2f}%), velocity {row['equal_trajectory_mean_velocity']:.4f} m/s "
-            f"({row['relative_change_percent_velocity']:+.2f}%), acceleration {row['equal_trajectory_mean_acceleration']:.4f} m/s^2 "
-            f"({row['relative_change_percent_acceleration']:+.2f}%), maximum steering-step reduction "
+            f"- {row['dataset']} / {row['model']}: heading {row['equal_trajectory_mean_heading_angle']:.6f} rad "
+            f"({format_relative_change_percent(row['relative_change_percent_heading_angle'])}), spacing {row['equal_trajectory_mean_arc_spacing']:.6f} m "
+            f"({format_relative_change_percent(row['relative_change_percent_arc_spacing'])}), velocity {row['equal_trajectory_mean_velocity']:.6f} m/s "
+            f"({format_relative_change_percent(row['relative_change_percent_velocity'])}), acceleration {row['equal_trajectory_mean_acceleration']:.6f} m/s^2 "
+            f"({format_relative_change_percent(row['relative_change_percent_acceleration'])}), maximum steering-step reduction "
             f"{row['max_step_reduction_percent']:.2f}%, mean crossing-step reduction "
             f"{row['mean_crossing_step_reduction_percent']:.2f}%."
         )
